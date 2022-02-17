@@ -1,0 +1,18 @@
+MDScreen:
+    name:'scr1'
+    FloatLayout:
+        cols:1
+        GridLayout:
+            spacing: 40
+            size_hint: .3,.5
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            cols:1
+            MDFillRoundFlatButton:
+                text:
+                    'Start'
+                bold: True
+                size_hint: .1, .1
+                font_size: 32
+                on_press:
+                    app.root.current = 'scr1'
+                    root.manager.transition.direction = 'left'
