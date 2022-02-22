@@ -1,6 +1,7 @@
 MDScreen:
-    name:'login'
-    id: login
+
+    name: 'create_account'
+    id: create_account
     MDCard:
         size_hint: None, None
         size: 300, 400
@@ -10,18 +11,9 @@ MDScreen:
         spacing: 25
         orientation: 'vertical'
 
-        MDLabel:
-
-            text: "WELCOME"
-            font_size: 40
-            halign: 'center'
-            size_hint_y: None
-            height: self.texture_size[1]
-            padding_y: 15
-
         MDTextField:
             hint_text:'Username'
-            id: user_name
+            id: created_name
             icon_right: "account"
             size_hint_x: None
             width: 200
@@ -31,19 +23,34 @@ MDScreen:
 
         MDTextField:
             hint_text:'Password'
-            id: user_password
+            id: created_password
             icon_right: "eye-off"
             size_hint_x: None
             width: 200
-            password: True
+            password: False
+            pos_hint: {'center_x': .5}
+            font_size: 18
+            multiline: False
+
+        MDTextField:
+            hint_text:'PhoneNr'
+            id: PhoneNr
+            icon_right: "cell-phone"
+            size_hint_x: None
+            width: 200
+            password: False
             pos_hint: {'center_x': .5}
             font_size: 18
             multiline: False
 
         MDRoundFlatButton:
-            text: "LOG IN"
+            text: "Submit"
             font_size: 12
-            pos_hint: {"center_x": 0.5}
+            pos_hint: {"center_x": 0.2}
+            on_press:
+                app.root.User.submit_btn()
+                app.root.current = 'first_page'
+                root.manager.transition.direction = 'right'
 
         MDRoundFlatButton:
             text: "Back"
@@ -52,4 +59,3 @@ MDScreen:
             on_press:
                 app.root.current = 'first_page'
                 root.manager.transition.direction = 'right'
-
