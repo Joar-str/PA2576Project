@@ -1,5 +1,4 @@
 MDScreen:
-
     name: 'create_account'
     id: create_account
     MDCard:
@@ -48,7 +47,7 @@ MDScreen:
             font_size: 12
             pos_hint: {"center_x": 0.2}
             on_press:
-                app.root.User.submit_btn()
+                app.account_labels()
                 app.root.current = 'first_page'
                 root.manager.transition.direction = 'right'
 

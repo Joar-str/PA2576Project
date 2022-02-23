@@ -1,3 +1,4 @@
+
 MDScreen:
     name:'login'
     id: login
@@ -44,11 +45,14 @@ MDScreen:
             text: "LOG IN"
             font_size: 12
             pos_hint: {"center_x": 0.5}
+            on_press:
+                if app.login_input(): app.root.current = 'home_page'
+
 
         MDRoundFlatButton:
             text: "Back"
             font_size: 12
-            pos_hint: {"center_x": 0.2}
+            pos_hint: {"center_x": 0.5}
             on_press:
                 app.root.current = 'first_page'
                 root.manager.transition.direction = 'right'
