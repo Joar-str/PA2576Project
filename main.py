@@ -8,7 +8,7 @@ from inspect import currentframe, getfile
 
 
 MYSQL_USER =  'root' #USER-NAME
-MYSQL_PASS =  'Strandberg13' #MYSQL_PASS
+MYSQL_PASS =  '---' #MYSQL_PASS
 MYSQL_DATABASE = 'appproject'#DATABASE_NAME
 
 connection = mysql.connect(user=MYSQL_USER,
