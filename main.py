@@ -1,14 +1,11 @@
 import mysql.connector as mysql
-from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.lang import Builder
 from kivy.properties import ObjectProperty, StringProperty
-from os import path
-from inspect import currentframe, getfile
-
+from kivymd.toast import toast
+from kivy.uix.boxlayout import BoxLayout
 
 MYSQL_USER =  'root' #USER-NAME
-MYSQL_PASS =  '---' #MYSQL_PASS
+MYSQL_PASS =  'Strandberg13' #MYSQL_PASS
 MYSQL_DATABASE = 'appproject'#DATABASE_NAME
 
 connection = mysql.connect(user=MYSQL_USER,
@@ -18,7 +15,15 @@ connection = mysql.connect(user=MYSQL_USER,
 
 
 cnx = connection.cursor(dictionary=True)
+class PopMessages:
+    def invalid_input(self):
+        toast("Incorrect password or username", duration=2)
 
+    def account_created(self):
+        toast("You are now a member of Student Market", duration=2)
+
+    def already_exisiting(self):
+        toast("A user with this username exists already", duration=3)
 
 class User:
     created_password = StringProperty('')
@@ -30,29 +35,53 @@ class User:
         self.password = password
         self.phonenr = phonenr
 
+    def get_name(self):
+        return self.name
+
+    def get_password(self):
+        return self.password
+
+    def get_phonenr(self):
+        return self.phonenr
+
     def createUser(self):
         try:
             cnx.execute(f"INSERT INTO User(email, password, phoneNr) Values('{self.name}',"
                         f" '{self.password}', '{self.phonenr}')")
             connection.commit()
+            PopMessages().account_created()
+
         except:
-            print('Konto med detta nummer finns redan!')
             connection.close()
+            PopMessages().already_exisiting()
 
 
-class LoginPage:
+class LoginPage(ScreenManager):
+
     def check_account(self, name, password):
-        name_variable = cnx(f"SELECT password FROM User WHERE email = f'{name}'")
-        connection.commit()
-        connection.close()
-        valid = False
-        if password == name_variable:
-            valid = True
+        try:
 
-        else:
-            print('fel lösenord eller användarnamn')
+            password_variable = f"SELECT password FROM User WHERE email = '{name}'"
+            cnx.execute(password_variable)
+            password_query = cnx.fetchone()
+            connection.commit()
+            if password == password_query.get('password'):
+                return True
 
-        return valid
+            else:
+                return False
+        except:
+            pass
+
+class HomePage(Screen):
+    pass
+
+
+
+
+
+
+
 
 
 

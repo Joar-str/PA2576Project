@@ -1,35 +1,21 @@
 from kivymd.app import MDApp
-import mysql.connector as mysql
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from main import User, LoginPage
-from kivy.properties import ObjectProperty, StringProperty
-from os import path
-from inspect import currentframe, getfile
-
-MYSQL_USER =  'root' #USER-NAME
-MYSQL_PASS =  'Strandberg13' #MYSQL_PASS
-MYSQL_DATABASE = 'appproject'#DATABASE_NAME
-
-connection = mysql.connect(user=MYSQL_USER,
-                           passwd=MYSQL_PASS,
-                           database=MYSQL_DATABASE,
-                           host='127.0.0.1')
+from main import User, LoginPage, PopMessages
+from kivymd.toast import toast
+from kivy.uix.boxlayout import BoxLayout
 
 
-cnx = connection.cursor(dictionary=True)
+class MainApp(MDApp):
 
-
-
-class mainApp(MDApp):
     def build(self):
         self.sm = ScreenManager()
-        self.theme_cls.theme_style = "Dark"
+        self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "BlueGray"
-        self.sm.add_widget(Builder.load_file('first_page.kv'))
-        self.sm.add_widget(Builder.load_file('login_page.kv'))
-        self.sm.add_widget(Builder.load_file('createAccount_page.kv'))
-        self.sm.add_widget(Builder.load_file('home_page.kv'))
+        self.sm.add_widget(Builder.load_file('KV/first_page.kv'))
+        self.sm.add_widget(Builder.load_file('KV/login_page.kv'))
+        self.sm.add_widget(Builder.load_file('KV/createAccount_page.kv'))
+        self.sm.add_widget(Builder.load_file('KV/home_page.kv'))
         return self.sm
 
     def account_labels(self):
@@ -38,14 +24,25 @@ class mainApp(MDApp):
         phoneNr = self.sm.get_screen("create_account").ids.PhoneNr.text
         User(name, password, phoneNr).createUser()
 
+    def reset(self):
+        self.sm.get_screen('login').ids.user_password.text = ''
+        self.sm.get_screen('login').ids.user_name.text = ''
+
     def login_input(self):
-        name = self.sm.get_screen("login").ids.user_name.text
-        password = self.sm.get_screen("login").ids.user_password.text
-        LoginPage().check_account(name, password)
+        name = str(self.sm.get_screen("login").ids.user_name.text)
+        password = str(self.sm.get_screen("login").ids.user_password.text)
+        valid = LoginPage().check_account(name, password)
+        if valid:
+            self.root.current = 'home_page'
+            self.sm.get_screen('home_page').ids.profile_name.text = name
+            self.reset()
+        else:
+            PopMessages().invalid_input()
 
-
+    def set_user_info(self):
+        self.sm.get_screen('home_page').ids.edit_user.text = self.sm.get_screen("login").ids.user_name.text
 
 
 
 if __name__ == '__main__':
-    mainApp().run()
+    MainApp().run()
