@@ -46,7 +46,8 @@ class MainApp(MDApp):
         name = self.sm.get_screen('home_page').ids.edit_user.text
         phoneNr = self.sm.get_screen('home_page').ids.profile_phone.text
         password = self.sm.get_screen('home_page').ids.profile_password.text
-        HomePage().update_profile_info(old_name, name, password, phoneNr)
+        user_id = HomePage().get_user_id(old_name)
+        HomePage().update_profile_info(user_id, name, password, phoneNr)
 
     def login_input(self):
         """Funktion som hanterar login. Samt sätter användarens information på Profil skärmen"""

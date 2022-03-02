@@ -80,18 +80,20 @@ class HomePage(Screen):
         except:
             pass
 
-    def update_profile_info(self,name, new_name, password, phonenr):
-        cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
+    def get_user_id(self, name):
         user_id = f"SELECT USER_ID FROM User WHERE email = '{name}'"
         cnx.execute(user_id)
         result = cnx.fetchone()
         connection.commit()
-        print(user_id)
-        print(name, new_name, password, phonenr, result.get('USER_ID'))
-        update = f"UPDATE  User SET email = '{new_name}', password = '{password}', phoneNr = '{phonenr}' "\
-                 f"WHERE USER_ID = {result.get('User_ID')}"
+        return result.get('USER_ID')
+
+    def update_profile_info(self,ID, new_name, password, phonenr):
+        cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
+        update = f"UPDATE  User SET email = '{new_name}', password = '{password}', phoneNr = {phonenr} "\
+                 f"WHERE USER_ID = {ID}"
         cnx.execute(update)
         connection.commit()
+        print(ID, new_name, password, phonenr)
 
 
 
