@@ -16,6 +16,7 @@ connection = mysql.connect(user=MYSQL_USER,
 
 cnx = connection.cursor(dictionary=True)
 class PopMessages:
+    """En klass med som har samtliga pop meddelanden"""
     def invalid_input(self):
         toast("Incorrect password or username", duration=2)
 
@@ -35,16 +36,9 @@ class User:
         self.password = password
         self.phonenr = phonenr
 
-    def get_name(self):
-        return self.name
-
-    def get_password(self):
-        return self.password
-
-    def get_phonenr(self):
-        return self.phonenr
 
     def createUser(self):
+        """Funktion som skapar en användare och lägger till i databasen"""
         try:
             cnx.execute(f"INSERT INTO User(email, password, phoneNr) Values('{self.name}',"
                         f" '{self.password}', '{self.phonenr}')")
@@ -59,8 +53,9 @@ class User:
 class LoginPage(ScreenManager):
 
     def check_account(self, name, password):
+        """Funktion som kollar ifall användaren finns i databasem. Om inte
+        så skickas det ett fel meddelande"""
         try:
-
             password_variable = f"SELECT password FROM User WHERE email = '{name}'"
             cnx.execute(password_variable)
             password_query = cnx.fetchone()
@@ -74,7 +69,19 @@ class LoginPage(ScreenManager):
             pass
 
 class HomePage(Screen):
-    pass
+
+    def get_user_info(self, email):
+        try:
+            """Funktion som returnerar användarens telefonnummer som en string"""
+            user_phonenr = f"SELECT phoneNr FROM User Where email = '{email}'"
+            cnx.execute(user_phonenr)
+            user_query = cnx.fetchone()
+            connection.commit()
+            return str(user_query.get('phoneNr'))
+        except:
+            pass
+
+
 
 
 
