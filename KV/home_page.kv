@@ -63,6 +63,8 @@ Screen:
                                 text: 'Save'
                                 theme_text_color: "Custom"
                                 pos_hint: {'center_x': .5}
+                                on_release:
+                                    app.update_profile()
 
                     Widget:
 
@@ -91,6 +93,7 @@ Screen:
                             text: 'Log out'
                             on_release:
                                 app.root.current = 'login'
+                                app.reset()
                             IconLeftWidget:
                                 icon: 'logout'
                         OneLineIconListItem:
@@ -99,6 +102,13 @@ Screen:
                                 sm.current = 'home'
                             IconLeftWidget:
                                 icon: 'home'
+
+                        OneLineIconListItem:
+                            text: 'Watchlist'
+                            on_release:
+                                sm.current = 'home'
+                            IconLeftWidget:
+                                icon: 'format-list-numbered'
 
 
 

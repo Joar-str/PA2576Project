@@ -27,44 +27,42 @@ class MainApp(MDApp):
         phoneNr = self.sm.get_screen("create_account").ids.PhoneNr.text
         User(name, password, phoneNr).createUser()
 
-
     def reset(self):
         """reset funktion som nollställer önskade textFields"""
         self.sm.get_screen('login').ids.user_password.text = ''
         self.sm.get_screen('login').ids.user_name.text = ''
 
     def get_name(self):
-        name = str(self.sm.get_screen("login").ids.user_name.text)
-        return name
+        return self.sm.get_screen("login").ids.user_name.text
 
     def get_password(self):
-        password = str(self.sm.get_screen("login").ids.user_password.text)
-        return password
+        return self.sm.get_screen("login").ids.user_password.text
 
     def get_phonenr(self):
-        phoneNr = HomePage().get_user_info(self.get_name())
-        return phoneNr
+        return HomePage().get_user_info(self.get_name())
+
+    def update_profile(self):
+        old_name = self.get_name()
+        name = self.sm.get_screen('home_page').ids.edit_user.text
+        phoneNr = self.sm.get_screen('home_page').ids.profile_phone.text
+        password = self.sm.get_screen('home_page').ids.profile_password.text
+        HomePage().update_profile_info(old_name, name, password, phoneNr)
 
     def login_input(self):
         """Funktion som hanterar login. Samt sätter användarens information på Profil skärmen"""
-        #name = str(self.sm.get_screen("login").ids.user_name.text)
-        #password = str(self.sm.get_screen("login").ids.user_password.text)
-        #phoneNr = HomePage().get_user_info(name)
+        old_name = self.get_name()
         valid = LoginPage().check_account(self.get_name(), self.get_password())
         if valid:
             self.root.current = 'home_page'
-            self.sm.get_screen('home_page').ids.profile_name.text = self.get_name()
-            self.sm.get_screen('home_page').ids.edit_user.text = self.get_name()
+            self.sm.get_screen('home_page').ids.profile_name.text = old_name
+            self.sm.get_screen('home_page').ids.edit_user.text = old_name
             self.sm.get_screen('home_page').ids.profile_phone.text = self.get_phonenr()
             self.sm.get_screen('home_page').ids.profile_password.text = self.get_password()
-            self.reset()
+
 
         else:
+            self.reset()
             PopMessages().invalid_input()
-
-
-
-
 
 
 

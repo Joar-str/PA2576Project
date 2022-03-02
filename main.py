@@ -2,6 +2,7 @@ import mysql.connector as mysql
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivymd.toast import toast
+
 from kivy.uix.boxlayout import BoxLayout
 
 MYSQL_USER =  'root' #USER-NAME
@@ -36,7 +37,6 @@ class User:
         self.password = password
         self.phonenr = phonenr
 
-
     def createUser(self):
         """Funktion som skapar en användare och lägger till i databasen"""
         try:
@@ -69,7 +69,6 @@ class LoginPage(ScreenManager):
             pass
 
 class HomePage(Screen):
-
     def get_user_info(self, email):
         try:
             """Funktion som returnerar användarens telefonnummer som en string"""
@@ -81,8 +80,18 @@ class HomePage(Screen):
         except:
             pass
 
-
-
+    def update_profile_info(self,name, new_name, password, phonenr):
+        cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
+        user_id = f"SELECT USER_ID FROM User WHERE email = '{name}'"
+        cnx.execute(user_id)
+        result = cnx.fetchone()
+        connection.commit()
+        print(user_id)
+        print(name, new_name, password, phonenr, result.get('USER_ID'))
+        update = f"UPDATE  User SET email = '{new_name}', password = '{password}', phoneNr = '{phonenr}' "\
+                 f"WHERE USER_ID = {result.get('User_ID')}"
+        cnx.execute(update)
+        connection.commit()
 
 
 
