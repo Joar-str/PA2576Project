@@ -1,0 +1,31 @@
+MDScreen:
+    name:'first_page'
+    id: first_page
+    FloatLayout:
+        cols:1
+        GridLayout:
+            spacing: 10
+            size_hint: .3,.5
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            cols:1
+            MDRectangleFlatButton:
+                text:
+                    'login'
+                bold: True
+                pos_hint: .5, .3
+                size_hint: .1, .1
+                font_size: 14
+                on_press:
+                    app.root.current = 'login'
+                    root.manager.transition.direction = 'left'
+
+            MDRectangleFlatButton:
+                text:
+                    'Create Account'
+                bold: True
+                pos_hint: .5, .5
+                size_hint: .1, .1
+                font_size: 14
+                on_press:
+                    app.root.current = 'create_account'
+                    root.manager.transition.direction = 'left'

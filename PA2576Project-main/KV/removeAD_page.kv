@@ -1,0 +1,37 @@
+MDScreen:
+    name: 'removeAD'
+    id: removeAD
+    MDCard:
+        size_hint: None, None
+        size: 400, 800
+        pos_hint: {"center_x": .5, "center_y": .5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDTextField:
+            hint_text:'Ad id'
+            id: specified_adID
+            size_hint_x: None
+            width: 200
+            font_size: 12
+            pos_hint: {'center_x': .5}
+            multiline: False
+
+        MDRoundFlatButton:
+            text: "Remove"
+            font_size: 12
+            pos_hint: {"center_x": 0.2}
+            on_press:
+                app.salesAD_remove()
+                app.root.current = 'home_page'
+                root.manager.transition.direction = 'right'
+
+        MDRoundFlatButton:
+            text: "Back"
+            font_size: 12
+            pos_hint: {"center_x": 0.2}
+            on_press:
+                app.root.current = 'home_page'
+                root.manager.transition.direction = 'right'

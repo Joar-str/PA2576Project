@@ -1,0 +1,113 @@
+Screen:
+    name:'home_page'
+    id: home_page
+    MDNavigationLayout:
+        ScreenManager:
+            id: sm
+            Screen:
+                id: home
+                name: 'home'
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDToolbar:
+                        title: "Menu"
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                    Widget:
+                    MDRoundFlatButton:
+                        text: "Publish AD"
+                        font_size: 12
+                        pos_hint: {"center_x": 0.5}
+                        on_press:
+                            app.root.current = 'createSalesAD'
+                            root.manager.transition.direction = 'left'
+                    MDRoundFlatButton:
+                        text: "Remove AD"
+                        font_size: 12
+                        pos_hint: {"center_x": 0.5}
+                        on_press:
+                            app.root.current = 'removeAD'
+                            root.manager.transition.direction = 'left'
+                            
+
+            Screen:
+                id: profile_screen
+                name: 'profile_screen'
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDToolbar:
+                        title: "Menu"
+                        elevation: 10
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                    Screen:
+
+                        MDTextField:
+                            id: edit_user
+                            icon_right: "account"
+                            size_hint_x: None
+                            width: 200
+                            font_size: 14
+                            pos_hint: {'center_x': .5, 'center_y': .9}
+                            multiline: False
+                            text:''
+                        MDTextField:
+                            hint_text:'Telephone Number'
+                            id: profile_phone
+                            icon_right: "phone"
+                            size_hint_x: None
+                            width: 200
+                            font_size: 14
+                            pos_hint: {'center_x': .5, 'center_y':.5}
+                            multiline: False
+                            text: 'phone'
+                        MDTextField:
+                            hint_text:'Username'
+                            id: created_name
+                            icon_right: "account"
+                            size_hint_x: None
+                            width: 200
+                            font_size: 14
+                            pos_hint: {'center_x': .5}
+                            multiline: False
+                            text: 'Welcome'
+
+                    Widget:
+
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            BoxLayout:
+                orientation: 'vertical'
+                spacing: '8dp'
+                padding: '8dp'
+                MDLabel:
+                    id: profile_name
+                    text: ''
+                    font_style: 'Caption'
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                ScrollView:
+                    MDList:
+                        OneLineIconListItem:
+                            text: 'Profile'
+                            on_release:
+                                sm.current = 'profile_screen'
+                            IconLeftWidget:
+                                icon: 'account'
+                        OneLineIconListItem:
+                            text: 'Log out'
+                            on_release:
+                                app.root.current = 'login'
+                            IconLeftWidget:
+                                icon: 'logout'
+                        OneLineIconListItem:
+                            text: 'Home'
+                            on_release:
+                                sm.current = 'home'
+                            IconLeftWidget:
+                                icon: 'home'
+
+
+
+
+
