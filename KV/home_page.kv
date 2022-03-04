@@ -11,7 +11,7 @@ Screen:
                     orientation: 'vertical'
                     MDToolbar:
                         title: "Menu"
-                        elevation: 10
+                        elevation: 5
                         left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
                     Widget:
 
@@ -22,20 +22,28 @@ Screen:
                     orientation: 'vertical'
                     MDToolbar:
                         title: "Menu"
-                        elevation: 10
+                        elevation: 5
                         left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
                     Screen:
-                        MDBoxLayout:
+                        BoxLayout:
                             orientation: 'vertical'
-                            spacing: '10dp'
-                            padding: '10dp'
+                            spacing: '0dp'
+                            padding: '-100dp'
+                            MDLabel:
+                                text: 'Your Profile'
+                                font_size: 30
+                                halign: 'center'
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                padding_y: 15
+
                             MDTextField:
                                 id: edit_user
                                 icon_right: "account"
                                 size_hint_x: None
                                 width: 200
                                 font_size: 14
-                                pos_hint: {'center_x': .5, 'center_y': .9}
+                                pos_hint: {'center_x': .5}
                                 multiline: False
                                 text:''
                             MDTextField:
@@ -73,8 +81,8 @@ Screen:
 
             BoxLayout:
                 orientation: 'vertical'
-                spacing: '8dp'
-                padding: '8dp'
+                spacing: '10dp'
+                padding: '10dp'
                 MDLabel:
                     id: profile_name
                     text: ''

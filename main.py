@@ -68,6 +68,7 @@ class LoginPage(ScreenManager):
         except:
             pass
 
+
 class HomePage(Screen):
     def get_user_info(self, email):
         try:
