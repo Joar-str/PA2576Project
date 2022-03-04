@@ -2,6 +2,7 @@ from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from main import User, LoginPage, PopMessages, HomePage, adManager
+from kivymd.uix.list import ThreeLineAvatarIconListItem
 from kivymd.toast import toast
 from kivy.uix.boxlayout import BoxLayout
 
@@ -29,6 +30,24 @@ class MainApp(MDApp):
         phoneNr = self.sm.get_screen("create_account").ids.PhoneNr.text
         User(name, password, phoneNr).createUser()
 
+    def amount_ad(self):
+        get_id = HomePage().get_user_id(self.get_name())
+        ad_list = HomePage().get_ad_info(get_id)
+        print(ad_list)
+        for i in range(len(ad_list)):
+            self.sm.get_screen('home_page').ids.container.add_widget(
+                ThreeLineAvatarIconListItem(text=f"Headline: {ad_list[i].get('headline')}",
+                                            secondary_text=f"Description: {ad_list[i].get('description')}"
+                                            , tertiary_text=f"Price: {ad_list[i].get('price')}")
+            )
+
+    def clear_your_adlist(self):
+        self.sm.get_screen('home_page').ids.container.clear_widgets()
+
+    def call_ad_info(self):
+        get_id = HomePage().get_user_id(self.get_name())
+        HomePage().get_ad_info(get_id)
+
     def reset(self):
         """reset funktion som nollställer önskade textFields"""
         self.sm.get_screen('login').ids.user_password.text = ''
@@ -41,16 +60,17 @@ class MainApp(MDApp):
         return self.sm.get_screen("login").ids.user_password.text
 
     def get_phonenr(self):
-        return HomePage().get_user_info(self.get_name())
+        return HomePage().get_user_phonenr(self.get_name())
 
     def salesAD_publish(self):
 
-        userID = self.get_name()
+        username = self.get_name()
+        headline = self.sm.get_screen("createSalesAD").ids.headline.text
         description = self.sm.get_screen("createSalesAD").ids.created_description.text
         author = self.sm.get_screen("createSalesAD").ids.created_author.text
         category = self.sm.get_screen("createSalesAD").ids.created_category.text
         price = self.sm.get_screen("createSalesAD").ids.created_price.text
-        adManager(userID, description, author, category, price).createAD()
+        adManager(headline, username, description, author, category, price).createAD()
 
     def salesAD_remove(self):
         adID = self.sm.get_screen("removeAD").ids.specified_adID.text

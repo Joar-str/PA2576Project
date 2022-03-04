@@ -1,4 +1,4 @@
-Screen:
+MDScreen:
     name:'home_page'
     id: home_page
     MDNavigationLayout:
@@ -91,10 +91,24 @@ Screen:
                                     app.update_profile()
 
                     Widget:
+            Screen:
+                id: your_ad
+                name: 'your_ad'
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDToolbar:
+                        title: "Menu"
+                        elevation: 5
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                    ScrollView:
+                        MDList:
+                            id: container
+
+
+
 
         MDNavigationDrawer:
             id: nav_drawer
-
             BoxLayout:
                 orientation: 'vertical'
                 spacing: '10dp'
@@ -113,13 +127,17 @@ Screen:
                                 sm.current = 'profile_screen'
                             IconLeftWidget:
                                 icon: 'account'
+
                         OneLineIconListItem:
+                            id: log_out
                             text: 'Log out'
                             on_release:
                                 app.root.current = 'login'
+                                app.clear_your_adlist()
                                 app.reset()
                             IconLeftWidget:
                                 icon: 'logout'
+
                         OneLineIconListItem:
                             text: 'Home'
                             on_release:
@@ -132,7 +150,14 @@ Screen:
                             on_release:
                                 sm.current = 'home'
                             IconLeftWidget:
-                                icon: 'format-list-numbered'
+                                icon: 'star'
+
+                        OneLineIconListItem:
+                            text: 'Your Ads'
+                            on_release:
+                                sm.current = 'your_ad'
+                            IconLeftWidget:
+                                icon: 'format-list-bulleted'
 
 
 

@@ -76,21 +76,19 @@ class LoginPage(ScreenManager):
 
 
 class adManager:
-    created_userID = StringProperty('')
-    created_description = StringProperty('')
-    created_author = StringProperty('')
-    created_category = StringProperty('')
-    created_price = ObjectProperty()
 
-    def __init__(self, userID, description, author, category, price):
-        self.userID = userID
+
+    def __init__(self, headline, username, description, author, category, price):
+        self.username = username
         self.description = description
         self.author = author
         self.category = category
         self.price = price
+        self.headline = headline
 
-    def get_userID(self):
-        return self.userID
+
+    def get_headline(self):
+        return self.headline
 
     def get_description(self):
         return self.description
@@ -104,23 +102,24 @@ class adManager:
     def get_price(self):
         return self.price
 
+    def get_userid_ad_list(self):
+        user_id = HomePage().get_user_id(self.username)
+        return user_id
+
     def createAD(self):
         try:
-
-            query = f"SELECT User_id FROM User where email = '{self.userID}'"
-            cnx.execute(query)
-            record = cnx.fetchone()
-            UserID1 = record.get('User_id')
+            user_id = HomePage().get_user_id(self.username)
             cnx.execute(
-                f"INSERT INTO Sales_ad(USER_id, description, author, category, price ) Values({UserID1},'{self.description}','{self.author}','{self.category}',{self.price})")
+                f"INSERT INTO Sales_ad(headline, USER_id, description, author, category, price ) "
+                f"Values('{self.headline}',{user_id},'{self.description}',"
+                f"'{self.author}','{self.category}',{self.price})")
             connection.commit()
-            connection.close()
             PopMessages().salesAD_created()
 
         except:
             connection.close()
 
-    def removeAD(self):
+    def removeAD(self, id):
 
         cnx.execute(f"DELETE FROM Sales_ad Where Ad_id =  '{self.adID}';")
         connection.commit()
@@ -128,7 +127,8 @@ class adManager:
 
 
 class HomePage(Screen):
-    def get_user_info(self, email):
+
+    def get_user_phonenr(self, email):
         try:
             """Funktion som returnerar användarens telefonnummer som en string"""
             user_phonenr = f"SELECT phoneNr FROM User Where email = '{email}'"
@@ -145,6 +145,21 @@ class HomePage(Screen):
         result = cnx.fetchone()
         connection.commit()
         return result.get('USER_ID')
+
+    def get_ad_info(self, user_id):
+        ad_info = f"SELECT headline, description, price FROM Sales_ad WHERE USER_ID = '{user_id}'"
+        cnx.execute(ad_info)
+        result = cnx.fetchall()
+        connection.commit()
+        print(result)
+        return result
+
+    def count_ads(self, userid):
+        count = f"SELECT COUNT(*) from sales_ad where user_id = {userid}"
+        cnx.execute(count)
+        count_result = cnx.fetchone()
+        connection.commit()
+        return count_result
 
     def update_profile_info(self,ID, new_name, password, phonenr):
         cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
