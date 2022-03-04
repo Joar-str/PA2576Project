@@ -2,23 +2,26 @@
 MDScreen:
     name:'login'
     id: login
-    MDCard:
+    BoxLayout:
+        MDLabel:
+            text: "STUDENT MARKET"
+            font_size: 20
+            pos_hint: {'center_y': .9}
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 15
+    BoxLayout:
 
         size_hint: None, None
         size: 300, 400
         pos_hint: {"center_x": .5, "center_y": .5}
         elevation: 10
-        padding: 25
-        spacing: 25
+        padding: 20
+        spacing: 20
         orientation: 'vertical'
 
-        MDLabel:
-            text: "WELCOME"
-            font_size: 40
-            halign: 'center'
-            size_hint_y: None
-            height: self.texture_size[1]
-            padding_y: 15
+
 
         MDTextField:
             hint_text:'Username'
@@ -47,18 +50,19 @@ MDScreen:
             font_size: 18
             multiline: False
 
-        MDRoundFlatButton:
-            text: "LOG IN"
+        MDRectangleFlatIconButton:
+            icon: "login"
+            theme_text_color: "Custom"
+            text: "SIGN IN"
             font_size: 12
             pos_hint: {"center_x": 0.5}
             on_press:
                 app.login_input()
 
-
-
-
-        MDRoundFlatButton:
-            text: "Back"
+        MDRectangleFlatIconButton:
+            icon: 'arrow-left-circle'
+            theme_text_color: "Custom"
+            text: "BACK"
             font_size: 12
             pos_hint: {"center_x": 0.5}
             on_press:

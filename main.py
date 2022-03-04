@@ -27,6 +27,12 @@ class PopMessages:
     def already_exisiting(self):
         toast("A user with this username exists already", duration=3)
 
+    def salesAD_created(self):
+        toast("A sales advertisement was sucessfully published", duration=4)
+
+    def salesAD_removed(self):
+        toast("A sales advertisement was sucessfully published", duration=4)
+
 class User:
     created_password = StringProperty('')
     created_name = StringProperty('')
@@ -67,6 +73,59 @@ class LoginPage(ScreenManager):
                 return False
         except:
             pass
+
+
+class adManager:
+    created_userID = StringProperty('')
+    created_description = StringProperty('')
+    created_author = StringProperty('')
+    created_category = StringProperty('')
+    created_price = ObjectProperty()
+
+    def __init__(self, userID, description, author, category, price):
+        self.userID = userID
+        self.description = description
+        self.author = author
+        self.category = category
+        self.price = price
+
+    def get_userID(self):
+        return self.userID
+
+    def get_description(self):
+        return self.description
+
+    def get_author(self):
+        return self.author
+
+    def get_category(self):
+        return self.category
+
+    def get_price(self):
+        return self.price
+
+    def createAD(self):
+        try:
+
+            query = f"SELECT User_id FROM User where email = '{self.userID}'"
+            cnx.execute(query)
+            record = cnx.fetchone()
+            UserID1 = record.get('User_id')
+            cnx.execute(
+                f"INSERT INTO Sales_ad(USER_id, description, author, category, price ) Values({UserID1},'{self.description}','{self.author}','{self.category}',{self.price})")
+            connection.commit()
+            connection.close()
+            PopMessages().salesAD_created()
+
+        except:
+            connection.close()
+
+    def removeAD(self):
+
+        cnx.execute(f"DELETE FROM Sales_ad Where Ad_id =  '{self.adID}';")
+        connection.commit()
+        PopMessages().salesAD_removed()
+
 
 class HomePage(Screen):
     def get_user_info(self, email):

@@ -1,7 +1,7 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from main import User, LoginPage, PopMessages, HomePage
+from main import User, LoginPage, PopMessages, HomePage, adManager
 from kivymd.toast import toast
 from kivy.uix.boxlayout import BoxLayout
 
@@ -18,6 +18,8 @@ class MainApp(MDApp):
         self.sm.add_widget(Builder.load_file('KV/login_page.kv'))
         self.sm.add_widget(Builder.load_file('KV/createAccount_page.kv'))
         self.sm.add_widget(Builder.load_file('KV/home_page.kv'))
+        self.sm.add_widget(Builder.load_file('KV/createSalesAD_page.kv'))
+        self.sm.add_widget(Builder.load_file('KV/removeAD_page.kv'))
         return self.sm
 
     def account_labels(self):
@@ -40,6 +42,19 @@ class MainApp(MDApp):
 
     def get_phonenr(self):
         return HomePage().get_user_info(self.get_name())
+
+    def salesAD_publish(self):
+
+        userID = self.get_name()
+        description = self.sm.get_screen("createSalesAD").ids.created_description.text
+        author = self.sm.get_screen("createSalesAD").ids.created_author.text
+        category = self.sm.get_screen("createSalesAD").ids.created_category.text
+        price = self.sm.get_screen("createSalesAD").ids.created_price.text
+        adManager(userID, description, author, category, price).createAD()
+
+    def salesAD_remove(self):
+        adID = self.sm.get_screen("removeAD").ids.specified_adID.text
+        adManager(adID).removeAD()
 
     def update_profile(self):
         old_name = self.get_name()
