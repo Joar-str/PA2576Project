@@ -6,7 +6,7 @@ from kivymd.toast import toast
 from kivy.uix.boxlayout import BoxLayout
 
 MYSQL_USER =  'root' #USER-NAME
-MYSQL_PASS =  'Strandberg13' #MYSQL_PASS
+MYSQL_PASS =  'NewPassword' #MYSQL_PASS
 MYSQL_DATABASE = 'appproject'#DATABASE_NAME
 
 connection = mysql.connect(user=MYSQL_USER,
@@ -33,7 +33,11 @@ class PopMessages:
     def salesAD_removed(self):
         toast("A sales advertisement was sucessfully published", duration=4)
 
+    def salesAD_updated(self):
+        toast('Your ad has been successfully updated', duration=2)
+
 class User:
+    """Klass som skapar en avnändare"""
     created_password = StringProperty('')
     created_name = StringProperty('')
     PhoneNr = ObjectProperty()
@@ -57,6 +61,7 @@ class User:
 
 
 class LoginPage(ScreenManager):
+    """Klass som hanterar inloggningen"""
 
     def check_account(self, name, password):
         """Funktion som kollar ifall användaren finns i databasem. Om inte
@@ -76,21 +81,19 @@ class LoginPage(ScreenManager):
 
 
 class adManager:
-    created_userID = StringProperty('')
-    created_description = StringProperty('')
-    created_author = StringProperty('')
-    created_category = StringProperty('')
-    created_price = ObjectProperty()
 
-    def __init__(self, userID, description, author, category, price):
-        self.userID = userID
+    """ Klass som hanterar funktioner så som att skapa och ta bort ads"""
+    def __init__(self, headline, username, description, author, category, price):
+        self.username = username
         self.description = description
         self.author = author
         self.category = category
         self.price = price
+        self.headline = headline
 
-    def get_userID(self):
-        return self.userID
+
+    def get_headline(self):
+        return self.headline
 
     def get_description(self):
         return self.description
@@ -104,23 +107,27 @@ class adManager:
     def get_price(self):
         return self.price
 
-    def createAD(self):
-        try:
+    def get_userid_ad_list(self):
+        """Funktionen retunerar den inloggades ID"""
+        user_id = HomePage().get_user_id(self.username)
+        return user_id
 
-            query = f"SELECT User_id FROM User where email = '{self.userID}'"
-            cnx.execute(query)
-            record = cnx.fetchone()
-            UserID1 = record.get('User_id')
+
+    def createAD(self):
+        """Skapar en ad och sätter in i datasbasen"""
+        try:
+            user_id = HomePage().get_user_id(self.username)
             cnx.execute(
-                f"INSERT INTO Sales_ad(USER_id, description, author, category, price ) Values({UserID1},'{self.description}','{self.author}','{self.category}',{self.price})")
+                f"INSERT INTO Sales_ad(headline, USER_id, description, author, category, price ) "
+                f"Values('{self.headline}',{user_id},'{self.description}',"
+                f"'{self.author}','{self.category}',{self.price})")
             connection.commit()
-            connection.close()
             PopMessages().salesAD_created()
 
         except:
             connection.close()
 
-    def removeAD(self):
+    def removeAD(self, id):
 
         cnx.execute(f"DELETE FROM Sales_ad Where Ad_id =  '{self.adID}';")
         connection.commit()
@@ -128,7 +135,10 @@ class adManager:
 
 
 class HomePage(Screen):
-    def get_user_info(self, email):
+    """Klass som har samtliga funktioner för appens sidor (exkluderat inlogg, skapa användare, skapa ad"""
+
+    def get_user_phonenr(self, email):
+        """Hämtar användarens telefonnummer"""
         try:
             """Funktion som returnerar användarens telefonnummer som en string"""
             user_phonenr = f"SELECT phoneNr FROM User Where email = '{email}'"
@@ -140,13 +150,31 @@ class HomePage(Screen):
             pass
 
     def get_user_id(self, name):
+        """Hämtar användarens ID från databasen"""
         user_id = f"SELECT USER_ID FROM User WHERE email = '{name}'"
         cnx.execute(user_id)
         result = cnx.fetchone()
         connection.commit()
         return result.get('USER_ID')
 
+    def get_all_ads(self, user_id):
+        """Hämtar samtliga ads som skapats av användaren från databasen"""
+        ad_info = f"SELECT * FROM Sales_ad WHERE USER_id = '{user_id}'"
+        cnx.execute(ad_info)
+        result = cnx.fetchall()
+        connection.commit()
+        return result
+
+    def get_specific_ad(self, ad_id):
+        """Hämtar en specfik ad som användaren skapat"""
+        ad = f"SELECT * FROM Sales_ad WHERE Ad_id = '{ad_id}'"
+        cnx.execute(ad)
+        the_ad = cnx.fetchone()
+        connection.commit()
+        return the_ad
+
     def update_profile_info(self,ID, new_name, password, phonenr):
+        """Uppdaterar användarens profil vid begäran"""
         cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
         update = f"UPDATE  User SET email = '{new_name}', password = '{password}', phoneNr = {phonenr} "\
                  f"WHERE USER_ID = {ID}"
@@ -154,6 +182,21 @@ class HomePage(Screen):
         connection.commit()
         print(ID, new_name, password, phonenr)
 
+    def update_ad(self, headline, dscrp, author, cat, price, ad_id):
+        """Uppdaterar en specifik ad vid begäran"""
+        cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
+        update = f"UPDATE Sales_ad SET headline = '{headline}', description = '{dscrp}', " \
+                 f"author = '{author}', category = '{cat}', price = {price} where Ad_id = {ad_id}"
+        cnx.execute(update)
+        connection.commit()
+
+class adImages:
+    """Klass som hanterar de bilder som uppladdas"""
+    def convertToBinaryData(self, file):
+        with open(file, 'rb') as f:
+            binaryData = f.read()
+
+        return binaryData
 
 
 

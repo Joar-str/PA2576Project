@@ -1,13 +1,14 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from main import User, LoginPage, PopMessages, HomePage, adManager
-from kivymd.toast import toast
-from kivy.uix.boxlayout import BoxLayout
+from main import User, LoginPage, PopMessages, HomePage, adManager, adImages
+from kivymd.uix.list import IconRightWidget, ThreeLineAvatarIconListItem
+
 
 
 class MainApp(MDApp):
     """Klass för själva appen."""
+    _current_ad_id = int
 
     def build(self):
         """Build funktion som initierar samtliga filer"""
@@ -20,6 +21,7 @@ class MainApp(MDApp):
         self.sm.add_widget(Builder.load_file('KV/home_page.kv'))
         self.sm.add_widget(Builder.load_file('KV/createSalesAD_page.kv'))
         self.sm.add_widget(Builder.load_file('KV/removeAD_page.kv'))
+
         return self.sm
 
     def account_labels(self):
@@ -28,6 +30,48 @@ class MainApp(MDApp):
         password = self.sm.get_screen("create_account").ids.created_password.text
         phoneNr = self.sm.get_screen("create_account").ids.PhoneNr.text
         User(name, password, phoneNr).createUser()
+
+    def amount_ad(self):
+        """Skapar en lista under fliken PROFILE med användarens
+        skapade ads och retunerar ID  på det ad man trycker på"""
+        try:
+            ad_list = HomePage().get_all_ads(HomePage().get_user_id(self.get_name()))
+            for i in range(len(ad_list)):
+                icon = IconRightWidget(icon='pencil-outline')
+                item = ThreeLineAvatarIconListItem(text=f"{ad_list[i].get('Ad_id')}",
+                                                secondary_text=f"{ad_list[i].get('headline')}"
+                                                , tertiary_text=f"Price: {ad_list[i].get('price')}")
+                item.add_widget(icon)
+                item.bind(on_press=self.edit_ad_input)
+                self.sm.get_screen('home_page').ids.container.add_widget(item)
+        except:
+            ValueError('ValueError')
+
+    def edit_ad_input(self, instance):
+        """Tar ad-ID som inparameter och sätter ADet's samtliga beskrivningar på EDIT-AD sidan"""
+        ad_id = instance.text
+        ad = HomePage().get_specific_ad(ad_id)
+        self.sm.get_screen('home_page').ids.edit_headline.text = ad.get('headline')
+        self.sm.get_screen("home_page").ids.edit_description.text = ad.get('description')
+        self.sm.get_screen("home_page").ids.edit_author.text = ad.get('author')
+        self.sm.get_screen("home_page").ids.edit_category.text = ad.get('category')
+        self.sm.get_screen("home_page").ids.edit_price.text = str(ad.get('price'))
+        self._current_ad_id = ad_id
+
+    def update_ad_input(self):
+        """Uppdaterar den nya AD-beskrivningen och skickar argumenten till salesAD_updated"""
+        ad_id = self._current_ad_id
+        headline = self.sm.get_screen('home_page').ids.edit_headline.text
+        dscrp = self.sm.get_screen("home_page").ids.edit_description.text
+        author = self.sm.get_screen("home_page").ids.edit_author.text
+        cat = self.sm.get_screen("home_page").ids.edit_category.text
+        price = self.sm.get_screen("home_page").ids.edit_price.text
+        HomePage().update_ad(headline, dscrp, author, cat, price, ad_id)
+        PopMessages().salesAD_updated()
+
+    def clear_your_adlist(self):
+        """Nollställer AD-listan"""
+        self.sm.get_screen('home_page').ids.container.clear_widgets()
 
     def reset(self):
         """reset funktion som nollställer önskade textFields"""
@@ -41,22 +85,25 @@ class MainApp(MDApp):
         return self.sm.get_screen("login").ids.user_password.text
 
     def get_phonenr(self):
-        return HomePage().get_user_info(self.get_name())
+        return HomePage().get_user_phonenr(self.get_name())
 
     def salesAD_publish(self):
+        """Publiserar en skapad ad och skapar ett objekt från klassen adManager"""
 
-        userID = self.get_name()
+        username = self.get_name()
+        headline = self.sm.get_screen("createSalesAD").ids.headline.text
         description = self.sm.get_screen("createSalesAD").ids.created_description.text
         author = self.sm.get_screen("createSalesAD").ids.created_author.text
         category = self.sm.get_screen("createSalesAD").ids.created_category.text
         price = self.sm.get_screen("createSalesAD").ids.created_price.text
-        adManager(userID, description, author, category, price).createAD()
+        adManager(headline, username, description, author, category, price).createAD()
 
     def salesAD_remove(self):
         adID = self.sm.get_screen("removeAD").ids.specified_adID.text
         adManager(adID).removeAD()
 
     def update_profile(self):
+        """Funktion som skickar den nya profil informationen till update_profile_info som sedan updaterar databasen"""
         old_name = self.get_name()
         name = self.sm.get_screen('home_page').ids.edit_user.text
         phoneNr = self.sm.get_screen('home_page').ids.profile_phone.text
