@@ -1,14 +1,23 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from main import User, LoginPage, PopMessages, HomePage, adManager, adImages
+from main import User, LoginPage, PopMessages, HomePage, adManager, adImages, createAD
 from kivymd.uix.list import IconRightWidget, ThreeLineAvatarIconListItem
-
+from kivymd.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty
+from search import SearchPopupMenu
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.button import MDFlatButton, MDRaisedButton
 
 
 class MainApp(MDApp):
-    """Klass för själva appen."""
     _current_ad_id = int
+    search_menu = None
+    """Klass för själva appen."""
+
+    class ContentNavigationDrawer(BoxLayout):
+        other_property = ObjectProperty()
+
 
     def build(self):
         """Build funktion som initierar samtliga filer"""
@@ -21,8 +30,32 @@ class MainApp(MDApp):
         self.sm.add_widget(Builder.load_file('KV/home_page.kv'))
         self.sm.add_widget(Builder.load_file('KV/createSalesAD_page.kv'))
         self.sm.add_widget(Builder.load_file('KV/removeAD_page.kv'))
-
         return self.sm
+
+
+    def show_dialog(self, **kwargs):
+        self.search_menu = MDDialog(
+            type='custom',
+            size_hint= (.5,.2),
+            content_cls=SearchPopupMenu(),
+            buttons=[MDFlatButton(text='Cancel'),
+                     MDRaisedButton(text='Search',
+                                    on_release=self.getApplication)]
+
+        )
+        self.search_menu.open()
+
+    def getApplication(self, *args):
+        """Funktion som kollar i Sales_ad om sökningen matchar något och retunerar om det finns"""
+        input = self.search_menu.content_cls.ids.search_dialog.text
+        applications = adManager().get_all_Applications()
+        a = [val for i in applications for val in i.values()]
+
+        for ele in a:
+            if input == ele:
+                print(ele)
+
+
 
     def account_labels(self):
         """Skapar ett objekt av klassen User med samtliga inparametrar"""
@@ -37,15 +70,23 @@ class MainApp(MDApp):
         try:
             ad_list = HomePage().get_all_ads(HomePage().get_user_id(self.get_name()))
             for i in range(len(ad_list)):
-                icon = IconRightWidget(icon='pencil-outline')
+
+                icon = IconRightWidget(icon='close', on_press=lambda *args, x=i: self.dropAD(ad_list[x].get('Ad_id')))
                 item = ThreeLineAvatarIconListItem(text=f"{ad_list[i].get('Ad_id')}",
                                                 secondary_text=f"{ad_list[i].get('headline')}"
                                                 , tertiary_text=f"Price: {ad_list[i].get('price')}")
+
                 item.add_widget(icon)
                 item.bind(on_press=self.edit_ad_input)
                 self.sm.get_screen('home_page').ids.container.add_widget(item)
+
         except:
             ValueError('ValueError')
+
+    def dropAD(self, instance):
+        """Skickar ad id till adManager.removeAD för att ta bort ad"""
+        adManager().removeAD(instance)
+        self.clear_your_adlist()
 
     def edit_ad_input(self, instance):
         """Tar ad-ID som inparameter och sätter ADet's samtliga beskrivningar på EDIT-AD sidan"""
@@ -96,11 +137,8 @@ class MainApp(MDApp):
         author = self.sm.get_screen("createSalesAD").ids.created_author.text
         category = self.sm.get_screen("createSalesAD").ids.created_category.text
         price = self.sm.get_screen("createSalesAD").ids.created_price.text
-        adManager(headline, username, description, author, category, price).createAD()
+        createAD(headline, username, description, author, category, price).createAD()
 
-    def salesAD_remove(self):
-        adID = self.sm.get_screen("removeAD").ids.specified_adID.text
-        adManager(adID).removeAD()
 
     def update_profile(self):
         """Funktion som skickar den nya profil informationen till update_profile_info som sedan updaterar databasen"""
@@ -126,7 +164,6 @@ class MainApp(MDApp):
         else:
             self.reset()
             PopMessages().invalid_input()
-
 
 
 if __name__ == '__main__':
