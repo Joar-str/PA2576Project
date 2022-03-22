@@ -1,10 +1,10 @@
+from unicodedata import category
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from main import User, LoginPage, PopMessages, HomePage, adManager, adImages
+from main import User, LoginPage, PopMessages, HomePage, Watchlist, adManager, adImages
 from kivymd.uix.list import IconRightWidget, ThreeLineAvatarIconListItem
-
-
+from kivy.uix.checkbox import CheckBox
 
 class MainApp(MDApp):
     """Klass för själva appen."""
@@ -101,6 +101,26 @@ class MainApp(MDApp):
     def salesAD_remove(self):
         adID = self.sm.get_screen("removeAD").ids.specified_adID.text
         adManager(adID).removeAD()
+    def check_books(self):
+        book= self.sm.get_screen('home_page').ids.bookbox.get_text
+        
+    def check_notes(self):
+        note= self.sm.get_screen('home_page').ids.notebox
+        note1= self.sm.get_screen('home_page').ids.note_lable.text
+        if note:
+            print(note)
+            print(note1)
+       
+    def watchlist_publish(self):
+        """Publiserar en skapad ad och skapar ett objekt från klassen adManager"""
+
+        username = self.get_name()
+        headline = self.sm.get_screen("home_page").ids.book_name.text
+        author = self.sm.get_screen("home_page").ids.subtype.text
+        
+        
+        Watchlist( username, headline, author).create_watchlist()
+
 
     def update_profile(self):
         """Funktion som skickar den nya profil informationen till update_profile_info som sedan updaterar databasen"""

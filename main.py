@@ -1,3 +1,4 @@
+from unicodedata import category
 import mysql.connector as mysql
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
@@ -35,6 +36,9 @@ class PopMessages:
 
     def salesAD_updated(self):
         toast('Your ad has been successfully updated', duration=2)
+    
+    def watchlist_created(self):
+        toast("A watchlist is created", duration= 2)
 
 class User:
     """Klass som skapar en avnändare"""
@@ -79,7 +83,38 @@ class LoginPage(ScreenManager):
         except:
             pass
 
+class Watchlist():
+    def __init__(self, username, headline, author):
+        self.username = username
+        self.author = author
+        self.headline = headline
 
+    def get_headline(self):
+        return self.headline
+    
+    def get_category(self):
+        return self.category
+    
+    def get_author(self):
+        return self.author
+    
+    
+
+    def create_watchlist(self, category):
+        """Skapar en ad och sätter in i datasbasen"""
+        
+        try:
+            user_id = HomePage().get_user_id(self.username)
+            cnx.execute(
+                f"INSERT INTO WatchList(USER_id, category, headline, author) "
+                f"Values({user_id}, '{category}', '{self.headline}','{self.author}')")
+            connection.commit()
+            PopMessages().watchlist_created()
+
+        except:
+            connection.close()
+
+    
 class adManager:
 
     """ Klass som hanterar funktioner så som att skapa och ta bort ads"""
@@ -90,7 +125,6 @@ class adManager:
         self.category = category
         self.price = price
         self.headline = headline
-
 
     def get_headline(self):
         return self.headline
