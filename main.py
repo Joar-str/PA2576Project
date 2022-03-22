@@ -6,12 +6,12 @@ from kivymd.toast import toast
 from kivy.uix.boxlayout import BoxLayout
 
 MYSQL_USER =  'root' #USER-NAME
-MYSQL_PASS =  'NewPassword' #MYSQL_PASS
-MYSQL_DATABASE = 'appproject'#DATABASE_NAME
+MYSQL_PASS =  '9904104495' #MYSQL_PASS
+MYSQL_DATABASE = 'AppProject'#DATABASE_NAME
 
 connection = mysql.connect(user=MYSQL_USER,
                            passwd=MYSQL_PASS,
-                           database=MYSQL_DATABASE,
+                           database=MYSQL_DATABASE, 
                            host='127.0.0.1')
 
 
