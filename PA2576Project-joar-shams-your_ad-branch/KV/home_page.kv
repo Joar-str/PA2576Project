@@ -91,6 +91,23 @@ MDScreen:
                     Widget:
 
             Screen:
+                id: all_ads
+                name: 'all_ads'
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDToolbar:
+                        title: "Menu"
+                        elevation: 5
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                    ScrollView:
+                        id: scroll
+                        MDList:
+                            id: container2
+                            on_touch_down:
+                                sm.current = 'edit_ad_page'
+            
+            
+            Screen:
                 id: your_ad
                 name: 'your_ad'
                 BoxLayout:
@@ -123,6 +140,7 @@ MDScreen:
                         MDTextField:
                             hint_text:'Headline'
                             id: edit_headline
+                            icon_right:
                             size_hint_x: None
                             width: 200
                             pos_hint: {'center_x': .5}
@@ -179,65 +197,7 @@ MDScreen:
                                 app.update_ad_input()
                                 sm.current = 'home'
                                 sm.transition.direction = 'right'
-            Screen:
-                id: whatchlist_screen
-                name: 'whatchlist_screen'
-                BoxLayout:
-                    orientation: 'vertical'
-                    MDToolbar:
-                        title: "Menu"
-                        elevation: 10
-                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
-                    Screen:
-                        BoxLayout:
-                            orientation: 'vertical'
-                            spacing: '10dp'
-                            padding: '10dp'
-                            MDLabel:
-                                text: 'Your Watchlist'
-                                font_size: 30
-                                halign: 'center'
-                                size_hint_y: None
-                                height: self.texture_size[1]
-                                padding_y: 15
 
-                            MDCheckbox:
-                                size_hint: None, None
-                                size: "48dp", "48dp"
-                                pos_hint: {'center_x': 0.5, 'center_y': .75}
-                            MDLabel:
-                                text: "Book"
-                                pos_hint: {'center_x': 0.9, 'center_y': .75}
-                        
-                            MDCheckbox:
-                                size_hint: None, None
-                                size: "48dp", "48dp"
-                                pos_hint: {'center_x': 0.5, 'center_y': .6}
-                            MDLabel:
-                                text: "Notes"
-                                pos_hint: {'center_x': 0.9, 'center_y': .6}
-                            MDTextField:
-                                hint_text:'Subtype'
-                                id: subtype
-                                icon_right: "book-open-variant"
-                                size_hint_x: None
-                                width: 200
-                                font_size: 14
-                                pos_hint: {'center_x': .5, 'center_y':.4}
-                                multiline: True
-                                text: 'Welcome'
-                            MDTextField:
-                                hint_text:'Name of your choice'
-                                id: book_name
-                                icon_right: "book-open-variant"
-                                size_hint_x: None
-                                width: 200
-                                font_size: 14
-                                pos_hint: {'center_x': .5}
-                                multiline: False
-                                text: 'Welcome'
-                    Widget:
-                
 
 
         MDNavigationDrawer:
@@ -275,14 +235,16 @@ MDScreen:
                         OneLineIconListItem:
                             text: 'Home'
                             on_release:
-                                sm.current = 'home'
+                                app.clear_your_adlist()
+                                app.get_ads()
+                                sm.current = 'all_ads'
                             IconLeftWidget:
                                 icon: 'home'
 
                         OneLineIconListItem:
                             text: 'Watchlist'
                             on_release:
-                                sm.current = 'whatchlist_screen'
+                                sm.current = 'home'
                             IconLeftWidget:
                                 icon: 'star'
 

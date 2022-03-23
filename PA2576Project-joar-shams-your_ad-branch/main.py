@@ -7,12 +7,12 @@ from kivymd.toast import toast
 
 
 MYSQL_USER =  'root' #USER-NAME
-MYSQL_PASS =  '9904104495' #MYSQL_PASS
-MYSQL_DATABASE = 'AppProject'#DATABASE_NAME
+MYSQL_PASS =  '12345678' #MYSQL_PASS
+MYSQL_DATABASE = 'appproject'#DATABASE_NAME
 
 connection = mysql.connect(user=MYSQL_USER,
                            passwd=MYSQL_PASS,
-                           database=MYSQL_DATABASE, 
+                           database=MYSQL_DATABASE,
                            host='127.0.0.1')
 
 
@@ -92,6 +92,7 @@ class createAD:
         self.price = price
         self.headline = headline
 
+
     def get_headline(self):
         return self.headline
 
@@ -170,7 +171,15 @@ class HomePage(Screen):
         connection.commit()
         return result.get('USER_ID')
 
-    def get_all_ads(self, user_id):
+    def get_all_ads(self):
+        """Hämtar samtliga ads som skapats av användaren från databasen"""
+        ad_info = f"SELECT * FROM Sales_ad"
+        cnx.execute(ad_info)
+        result = cnx.fetchall()
+        connection.commit()
+        return result
+
+    def get_all_user_ads(self, user_id):
         """Hämtar samtliga ads som skapats av användaren från databasen"""
         ad_info = f"SELECT * FROM Sales_ad WHERE USER_id = '{user_id}'"
         cnx.execute(ad_info)

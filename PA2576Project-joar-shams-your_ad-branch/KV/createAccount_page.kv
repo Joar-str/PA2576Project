@@ -1,0 +1,101 @@
+MDScreen:
+    name: 'create_account'
+    id: create_account
+    
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'/Users/jakobcarlsson/Downloads/PA2576Project-joar-shams-your_ad-branch/pexels-photo-4778677 (kopia).png'
+            size: root.width, root.height
+            pos: self.pos
+
+
+    MDCard:
+        size_hint: None, None
+        size: 400, 500
+        pos_hint: {"center_x": .5, "center_y": .5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        border_radius: 20
+        radius: [15]
+        orientation: 'vertical'
+        
+        BoxLayout:
+
+            orientation:'vertical'
+            padding: 10
+            MDLabel:
+                text: "Create Account,"
+                font_size: 20
+                
+                halign: 'center'
+                size_hint_y: None
+                height: self.texture_size[1]
+                
+                theme_text_color: "Custom"
+                text_color: [0, 0, 0, 1]
+                font_size: 30
+                bold: True
+            
+            MDLabel:
+                text: "Sign up to get started!"
+                font_size: 20
+                
+                halign: 'center'
+                size_hint_y: None
+                height: self.texture_size[1]
+                
+                theme_text_color: "Custom"
+                text_color: [0, 0, 0, 1]
+                font_size: 15
+
+        MDTextField:
+            hint_text:'Username'
+            id: created_name
+            icon_right: "account"
+            size_hint_x: None
+            width: 200
+            font_size: 18
+            pos_hint: {'center_x': .5}
+            multiline: False
+
+        MDTextField:
+            hint_text:'Password'
+            id: created_password
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 200
+            password: False
+            pos_hint: {'center_x': .5}
+            font_size: 18
+            multiline: False
+
+        MDTextField:
+            hint_text:'Phonenumber'
+            id: PhoneNr
+            icon_right: "cell-phone"
+            size_hint_x: None
+            width: 200
+            password: False
+            pos_hint: {'center_x': .5}
+            font_size: 18
+            multiline: False
+
+        MDRoundFlatButton:
+            text: "Submit"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press:
+                app.account_labels()
+                app.root.current = 'first_page'
+                root.manager.transition.direction = 'right'
+
+        MDRoundFlatButton:
+            text: "Back"
+            font_size: 12
+            pos_hint: {"center_x": 0.5}
+            on_press:
+                app.root.current = 'first_page'
+                root.manager.transition.direction = 'right'
