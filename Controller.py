@@ -101,25 +101,22 @@ class MainApp(MDApp):
     def salesAD_remove(self):
         adID = self.sm.get_screen("removeAD").ids.specified_adID.text
         adManager(adID).removeAD()
-    def check_books(self):
-        book= self.sm.get_screen('home_page').ids.bookbox.get_text
+
         
-    def check_notes(self):
-        note= self.sm.get_screen('home_page').ids.notebox
-        note1= self.sm.get_screen('home_page').ids.note_lable.text
-        if note:
-            print(note)
-            print(note1)
+    
+    
        
     def watchlist_publish(self):
-        """Publiserar en skapad ad och skapar ett objekt från klassen adManager"""
-
+        """Skapar en bevakningslista från klassen Wachlist"""
+    
+       
         username = self.get_name()
+        category = self.sm.get_screen("home_page").ids.category.text
         headline = self.sm.get_screen("home_page").ids.book_name.text
         author = self.sm.get_screen("home_page").ids.subtype.text
         
         
-        Watchlist( username, headline, author).create_watchlist()
+        Watchlist( username, category, headline, author).create_watchlist()
 
 
     def update_profile(self):

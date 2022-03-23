@@ -84,8 +84,9 @@ class LoginPage(ScreenManager):
             pass
 
 class Watchlist():
-    def __init__(self, username, headline, author):
+    def __init__(self, username, category, headline, author):
         self.username = username
+        self.category = category
         self.author = author
         self.headline = headline
 
@@ -100,14 +101,14 @@ class Watchlist():
     
     
 
-    def create_watchlist(self, category):
-        """Skapar en ad och sätter in i datasbasen"""
+    def create_watchlist(self):
+        """Skapar en bevakningslista och sätter in i datasbasen"""
         
         try:
             user_id = HomePage().get_user_id(self.username)
             cnx.execute(
                 f"INSERT INTO WatchList(USER_id, category, headline, author) "
-                f"Values({user_id}, '{category}', '{self.headline}','{self.author}')")
+                f"Values({user_id}, '{self.category}', '{self.headline}','{self.author}')")
             connection.commit()
             PopMessages().watchlist_created()
 
