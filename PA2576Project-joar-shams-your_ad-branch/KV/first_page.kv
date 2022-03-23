@@ -1,0 +1,67 @@
+MDScreen:
+    name:'first_page'
+    id: first_page
+
+    MDCard:
+        FloatLayout:
+            elevation: 20
+            canvas.before:
+                Color:
+                    rgba: (1, 1, 1, 1)
+                Rectangle:
+                    source:'/Users/jakobcarlsson/Downloads/PA2576Project-joar-shams-your_ad-branch/pexels-photo-4778677.jpeg'
+                    size: root.width, root.height
+                    pos: self.pos
+                    
+
+                    
+                    
+
+            MDLabel:
+                text: 'STUDENT'
+                
+                halign: 'center'
+                pos_hint: {"center_y": .77}
+                theme_text_color: "Custom"
+                text_color: [1, 1, 1, 1]
+                font_size: 46
+                bold: True
+
+            MDLabel:
+                text: 'MARKET'
+                
+                halign: 'center'
+                pos_hint: {"center_y": .7}
+                theme_text_color: "Custom"
+                text_color: [1, 1, 1, 1]
+                font_size: 46
+                bold: True
+
+
+
+            MDRoundFlatButton:
+                text: 'SIGN IN'
+                size_hint: .6, .07
+                pos_hint: {"center_x":.5, "center_y": .4}
+                font_size: 20
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                line_color: 1, 1, 1, 1
+                elevation: 20
+                on_press:
+                    app.root.current = 'login'
+                    root.manager.transition.direction = 'left'
+
+            MDFillRoundFlatButton:
+                text: 'REGISTER'
+                size_hint: .6, .07
+                pos_hint: {"center_x":.5, "center_y": .3}
+                font_size: 20
+                theme_text_color: "Custom"
+                md_bg_color: 1, 1, 1, 1
+                elevation: 20
+                on_press:
+                    app.root.current = 'create_account'
+                    root.manager.transition.direction = 'left'
+        
+        
