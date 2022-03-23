@@ -92,7 +92,6 @@ class createAD:
         self.price = price
         self.headline = headline
 
-
     def get_headline(self):
         return self.headline
 

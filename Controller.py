@@ -34,15 +34,17 @@ class MainApp(MDApp):
 
 
     def show_dialog(self, **kwargs):
+        """Funktion som initierar ett sökfält och kallar sedan på getApplication() med textinput som argument"""
         self.search_menu = MDDialog(
             type='custom',
-            size_hint= (.5,.2),
+            size_hint= (1,.2),
             content_cls=SearchPopupMenu(),
             buttons=[MDFlatButton(text='Cancel'),
                      MDRaisedButton(text='Search',
                                     on_release=self.getApplication)]
 
         )
+
         self.search_menu.open()
 
     def getApplication(self, *args):
@@ -52,10 +54,7 @@ class MainApp(MDApp):
         a = [val for i in applications for val in i.values()]
 
         for ele in a:
-            if input == ele:
-                print(ele)
-
-
+            print(ele)
 
     def account_labels(self):
         """Skapar ett objekt av klassen User med samtliga inparametrar"""
