@@ -2,14 +2,15 @@
 MDScreen:
     name: 'createSalesAD'
     id: createSalesAD
-    BoxLayout:
-        orientation: 'vertical'
-        MDToolbar:
-            title: "Menu"
-            elevation: 5
-            left_action_items: [['menu', lambda x: root.ids.nav_drawer.set_state('toggle')]]
-    BoxLayout:
+    FloatLayout:
 
+        MDIconButton:
+            icon: 'close'
+            pos_hint: {"center_x": 0.9, "center_y": 0.9}
+            on_press:
+                app.root.current = 'home_page'
+                root.manager.transition.direction = 'right'
+    BoxLayout:
         padding: 25
         spacing: 25
         orientation: 'vertical'
@@ -72,10 +73,4 @@ MDScreen:
                 app.root.current = 'home_page'
                 root.manager.transition.direction = 'right'
 
-        MDRoundFlatButton:
-            text: "Back"
-            font_size: 12
-            pos_hint: {"center_x": 0.2}
-            on_press:
-                app.root.current = 'home_page'
-                root.manager.transition.direction = 'right'
+

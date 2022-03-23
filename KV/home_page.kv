@@ -1,3 +1,5 @@
+#:include KV/searchDialog.kv
+
 MDScreen:
     name:'home_page'
     id: home_page
@@ -13,22 +15,18 @@ MDScreen:
                         title: "Menu"
                         elevation: 5
                         left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                        right_action_items: [['magnify', lambda x: app.show_dialog()]]
                     Screen:
                         BoxLayout:
+                            orientation: 'vertical'
                             MDRoundFlatButton:
-                                text: "Publish AD"
+                                text: "Create ad"
                                 font_size: 12
                                 pos_hint: {"center_x": 0.5}
                                 on_press:
                                     app.root.current = 'createSalesAD'
                                     root.manager.transition.direction = 'left'
-                            MDRoundFlatButton:
-                                text: "Remove AD"
-                                font_size: 12
-                                pos_hint: {"center_x": 0.5}
-                                on_press:
-                                    app.root.current = 'removeAD'
-                                    root.manager.transition.direction = 'left'
+
                     Widget:
 
             Screen:
@@ -102,6 +100,7 @@ MDScreen:
                         elevation: 5
                         left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
                     ScrollView:
+                        id: scroll
                         MDList:
                             id: container
                             on_touch_down:
@@ -124,7 +123,6 @@ MDScreen:
                         MDTextField:
                             hint_text:'Headline'
                             id: edit_headline
-                            icon_right:
                             size_hint_x: None
                             width: 200
                             pos_hint: {'center_x': .5}
@@ -242,10 +240,9 @@ MDScreen:
                 
 
 
-
-
         MDNavigationDrawer:
             id: nav_drawer
+
             BoxLayout:
                 orientation: 'vertical'
                 spacing: '10dp'
@@ -298,6 +295,12 @@ MDScreen:
 
                             IconLeftWidget:
                                 icon: 'format-list-bulleted'
+
+                        OneLineIconListItem:
+                            text: 'Messages'
+                            IconLeftWidget:
+                                icon: 'message'
+
 
 
 

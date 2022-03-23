@@ -3,7 +3,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivymd.toast import toast
 
-from kivy.uix.boxlayout import BoxLayout
+
+
 
 MYSQL_USER =  'root' #USER-NAME
 MYSQL_PASS =  '9904104495' #MYSQL_PASS
@@ -31,7 +32,7 @@ class PopMessages:
         toast("A sales advertisement was sucessfully published", duration=4)
 
     def salesAD_removed(self):
-        toast("A sales advertisement was sucessfully published", duration=4)
+        toast("A sales advertisement was sucessfully removed", duration=4)
 
     def salesAD_updated(self):
         toast('Your ad has been successfully updated', duration=2)
@@ -80,9 +81,9 @@ class LoginPage(ScreenManager):
             pass
 
 
-class adManager:
+class createAD:
 
-    """ Klass som hanterar funktioner så som att skapa och ta bort ads"""
+    """ Klass som hanterar funktioner så som att skapa ad"""
     def __init__(self, headline, username, description, author, category, price):
         self.username = username
         self.description = description
@@ -90,7 +91,6 @@ class adManager:
         self.category = category
         self.price = price
         self.headline = headline
-
 
     def get_headline(self):
         return self.headline
@@ -127,11 +127,24 @@ class adManager:
         except:
             connection.close()
 
-    def removeAD(self, id):
 
-        cnx.execute(f"DELETE FROM Sales_ad Where Ad_id =  '{self.adID}';")
+class adManager:
+
+
+    def removeAD(self, adID):
+        cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
+        delete = f"DELETE FROM Sales_ad Where Ad_id = '{adID}'"
+        cnx.execute(delete)
         connection.commit()
         PopMessages().salesAD_removed()
+
+    def get_all_Applications(self, *args):
+        searchInput = f"SELECT * FROM Sales_ad"
+        cnx.execute(searchInput)
+        result = cnx.fetchall()
+        connection.commit()
+        return result
+
 
 
 class HomePage(Screen):
@@ -197,9 +210,6 @@ class adImages:
             binaryData = f.read()
 
         return binaryData
-
-
-
 
 
 
