@@ -1,5 +1,6 @@
 #:include KV/searchDialog.kv
 
+
 MDScreen:
     name:'home_page'
     id: home_page
@@ -11,6 +12,7 @@ MDScreen:
                 name: 'home'
                 BoxLayout:
                     orientation: 'vertical'
+
                     MDToolbar:
                         title: "Menu"
                         elevation: 5
@@ -19,15 +21,14 @@ MDScreen:
                     Screen:
                         BoxLayout:
                             orientation: 'vertical'
-                            MDRoundFlatButton:
-                                text: "Create ad"
-                                font_size: 12
-                                pos_hint: {"center_x": 0.5}
-                                on_press:
-                                    app.root.current = 'createSalesAD'
-                                    root.manager.transition.direction = 'left'
-
-                    Widget:
+                            ScrollView:
+                                MDList:
+                                    id: ad_container
+                        MDFloatingActionButton:
+                            pos_hint: {"center_x": .5}
+                            icon: 'plus'
+                            on_press:
+                                app.root.current = 'createSalesAD'
 
             Screen:
                 id: profile_screen
@@ -38,6 +39,7 @@ MDScreen:
                         title: "Menu"
                         elevation: 5
                         left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                        right_action_items: [['magnify', lambda x: app.show_dialog()]]
                     Screen:
                         BoxLayout:
                             orientation: 'vertical'
@@ -99,6 +101,7 @@ MDScreen:
                         title: "Menu"
                         elevation: 5
                         left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                        right_action_items: [['magnify', lambda x: app.show_dialog()]]
                     ScrollView:
                         id: scroll
                         MDList:
@@ -115,6 +118,7 @@ MDScreen:
                         title: "Menu"
                         elevation: 5
                         left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                        right_action_items: [['magnify', lambda x: app.show_dialog()]]
                     BoxLayout:
                         id: edit_layout
                         orientation: 'vertical'
@@ -175,7 +179,7 @@ MDScreen:
                             theme_text_color: "Custom"
                             pos_hint: {'center_x': .5}
                             on_release:
-                                app.clear_your_adlist()
+                                app.clear_your_adlist('container')
                                 app.update_ad_input()
                                 sm.current = 'home'
                                 sm.transition.direction = 'right'
@@ -209,7 +213,7 @@ MDScreen:
                             text: 'Log out'
                             on_release:
                                 app.root.current = 'login'
-                                app.clear_your_adlist()
+                                app.clear_your_adlist('container')
                                 app.reset()
                             IconLeftWidget:
                                 icon: 'logout'
@@ -218,6 +222,9 @@ MDScreen:
                             text: 'Home'
                             on_release:
                                 sm.current = 'home'
+                                app.set_homepage_ads()
+                                sm.transition.direction = 'right'
+
                             IconLeftWidget:
                                 icon: 'home'
 
@@ -231,7 +238,7 @@ MDScreen:
                         OneLineIconListItem:
                             text: 'Your Ads'
                             on_release:
-                                app.clear_your_adlist()
+                                app.clear_your_adlist('container')
                                 app.amount_ad()
                                 sm.current = 'your_ad'
 

@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 from main import User, LoginPage, PopMessages, HomePage, adManager, adImages, createAD
 from kivymd.uix.list import IconRightWidget, ThreeLineAvatarIconListItem
+from kivymd.uix.imagelist import SmartTileWithLabel
 from kivymd.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from search import SearchPopupMenu
@@ -51,10 +52,10 @@ class MainApp(MDApp):
         """Funktion som kollar i Sales_ad om sökningen matchar något och retunerar om det finns"""
         input = self.search_menu.content_cls.ids.search_dialog.text
         applications = adManager().get_all_Applications()
-        a = [val for i in applications for val in i.values()]
-
-        for ele in a:
-            print(ele)
+        self.clear_your_adlist('ad_container')
+        for ele in applications:
+            if input in ele.values():
+                self.search_ads(HomePage().get_specific_ad(ele.get('Ad_id')))
 
     def account_labels(self):
         """Skapar ett objekt av klassen User med samtliga inparametrar"""
@@ -82,10 +83,29 @@ class MainApp(MDApp):
         except:
             ValueError('ValueError')
 
+    def search_ads(self, ad):
+        """Visar ads som matchar sökordet från getApplication()"""
+        item = ThreeLineAvatarIconListItem(text=f"{ad.get('Ad_id')}",
+                                           secondary_text=f"{ad.get('headline')}"
+                                           , tertiary_text=f"Price: {ad.get('price')}")
+
+        self.sm.get_screen('home_page').ids.ad_container.add_widget(item)
+
+    def set_homepage_ads(self):
+        self.clear_your_adlist('ad_container')
+        appli = adManager().get_all_Applications()
+        for i in range(len(appli)):
+            item = ThreeLineAvatarIconListItem(text=f"{appli[i].get('Ad_id')}",
+                                               secondary_text=f"{appli[i].get('headline')}"
+                                               , tertiary_text=f"Price: {appli[i].get('price')}")
+
+            self.sm.get_screen('home_page').ids.ad_container.add_widget(item)
+
+
     def dropAD(self, instance):
         """Skickar ad id till adManager.removeAD för att ta bort ad"""
         adManager().removeAD(instance)
-        self.clear_your_adlist()
+        self.clear_your_adlist('container')
 
     def edit_ad_input(self, instance):
         """Tar ad-ID som inparameter och sätter ADet's samtliga beskrivningar på EDIT-AD sidan"""
@@ -109,9 +129,9 @@ class MainApp(MDApp):
         HomePage().update_ad(headline, dscrp, author, cat, price, ad_id)
         PopMessages().salesAD_updated()
 
-    def clear_your_adlist(self):
+    def clear_your_adlist(self, widget_id):
         """Nollställer AD-listan"""
-        self.sm.get_screen('home_page').ids.container.clear_widgets()
+        self.sm.get_screen('home_page').ids[f"{widget_id}"].clear_widgets()
 
     def reset(self):
         """reset funktion som nollställer önskade textFields"""
@@ -154,6 +174,7 @@ class MainApp(MDApp):
         valid = LoginPage().check_account(self.get_name(), self.get_password())
         if valid:
             self.root.current = 'home_page'
+            self.set_homepage_ads()
             self.sm.get_screen('home_page').ids.profile_name.text = old_name
             self.sm.get_screen('home_page').ids.edit_user.text = old_name
             self.sm.get_screen('home_page').ids.profile_phone.text = self.get_phonenr()

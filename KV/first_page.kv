@@ -1,29 +1,64 @@
 MDScreen:
     name:'first_page'
     id: first_page
-    FloatLayout:
 
-        MDLabel:
-            text: 'Welcome To Student Market'
-            font_style: 'H1'
-            halign: 'center'
-            pos_hint: {"center_y": .8}
-            font_size: 35
+    MDCard:
+        FloatLayout:
+            elevation: 20
+            canvas.before:
+                Color:
+                    rgba: (1, 1, 1, 1)
+                Rectangle:
+                    source:'Images/pexels-photo-4.jpeg'
+                    size: root.width, root.height
+                    pos: self.pos
 
-        MDRoundFlatButton:
-            text: 'login'
-            size_hint: .4, .1
-            pos_hint: {"center_x":.5, "center_y": .6}
-            font_size: 14
-            on_press:
-                app.root.current = 'login'
-                root.manager.transition.direction = 'left'
 
-        MDRoundFlatButton:
-            text: 'Create Account'
-            size_hint: .4, .1
-            pos_hint: {"center_x":.5, "center_y": .4}
-            font_size: 14
-            on_press:
-                app.root.current = 'create_account'
-                root.manager.transition.direction = 'left'
+            MDLabel:
+                text: 'STUDENT'
+
+                halign: 'center'
+                pos_hint: {"center_y": .77}
+                theme_text_color: "Custom"
+                text_color: [1, 1, 1, 1]
+                font_size: 46
+                bold: True
+
+            MDLabel:
+                text: 'MARKET'
+
+                halign: 'center'
+                pos_hint: {"center_y": .7}
+                theme_text_color: "Custom"
+                text_color: [1, 1, 1, 1]
+                font_size: 46
+                bold: True
+
+
+
+            MDRoundFlatButton:
+                text: 'SIGN IN'
+                size_hint: .6, .07
+                pos_hint: {"center_x":.5, "center_y": .4}
+                font_size: 20
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                line_color: 1, 1, 1, 1
+                elevation: 20
+                on_press:
+                    app.root.current = 'login'
+                    root.manager.transition.direction = 'left'
+
+            MDFillRoundFlatButton:
+                text: 'REGISTER'
+                size_hint: .6, .07
+                pos_hint: {"center_x":.5, "center_y": .3}
+                font_size: 20
+                theme_text_color: "Custom"
+                text_color: 0, 0, 0, 2
+                line_color: 1, 1, 1, 1
+                md_bg_color: 1, 1, 1, 1
+                elevation: 20
+                on_press:
+                    app.root.current = 'create_account'
+                    root.manager.transition.direction = 'left'

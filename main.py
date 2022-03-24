@@ -37,6 +37,9 @@ class PopMessages:
     def salesAD_updated(self):
         toast('Your ad has been successfully updated', duration=2)
 
+    def no_match(self):
+        toast('learn to spell', duration=2)
+
 class User:
     """Klass som skapar en avnändare"""
     created_password = StringProperty('')

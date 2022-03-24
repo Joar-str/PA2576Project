@@ -2,24 +2,43 @@
 MDScreen:
     name:'login'
     id: login
-    BoxLayout:
-        MDLabel:
-            text: "STUDENT MARKET"
-            font_size: 20
-            pos_hint: {'center_y': .9}
-            halign: 'center'
-            size_hint_y: None
-            height: self.texture_size[1]
-            padding_y: 15
+
+
     BoxLayout:
 
         size_hint: None, None
         size: 300, 400
         pos_hint: {"center_x": .5, "center_y": .5}
         elevation: 10
-        padding: 20
+        padding: 10
         spacing: 20
         orientation: 'vertical'
+
+        MDLabel:
+            text: "Welcome"
+            font_size: 20
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+
+            theme_text_color: "Custom"
+            text_color: [0, 0, 0, 1]
+            font_size: 46
+            bold: True
+
+        MDLabel:
+            text: "Sign in to continue!"
+            font_size: 20
+
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+
+            theme_text_color: "Custom"
+            text_color: [0, 0, 0, 1]
+            font_size: 20
+
+
 
 
         MDTextField:
@@ -59,9 +78,6 @@ MDScreen:
                 app.login_input()
                 app.amount_ad()
 
-
-
-
         MDRectangleFlatIconButton:
             icon: 'arrow-left-circle'
             theme_text_color: "Custom"
@@ -72,4 +88,3 @@ MDScreen:
                 app.reset()
                 app.root.current = 'first_page'
                 root.manager.transition.direction = 'right'
-

@@ -1,14 +1,55 @@
 MDScreen:
     name: 'create_account'
     id: create_account
+
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1)
+        Rectangle:
+            source:'Images/pexels-photo.png'
+            size: root.width, root.height
+            pos: self.pos
+
+
     MDCard:
         size_hint: None, None
-        size: 300, 400
+        size: 275, 400
         pos_hint: {"center_x": .5, "center_y": .5}
         elevation: 10
         padding: 25
         spacing: 25
+        border_radius: 20
+        radius: [15]
         orientation: 'vertical'
+
+        BoxLayout:
+
+            orientation:'vertical'
+            padding: 10
+            MDLabel:
+                text: "Create Account,"
+                font_size: 20
+
+                halign: 'center'
+                size_hint_y: None
+                height: self.texture_size[1]
+
+                theme_text_color: "Custom"
+                text_color: [0, 0, 0, 1]
+                font_size: 30
+                bold: True
+
+            MDLabel:
+                text: "Sign up to get started!"
+                font_size: 20
+
+                halign: 'center'
+                size_hint_y: None
+                height: self.texture_size[1]
+
+                theme_text_color: "Custom"
+                text_color: [0, 0, 0, 1]
+                font_size: 15
 
         MDTextField:
             hint_text:'Username'
@@ -32,7 +73,7 @@ MDScreen:
             multiline: False
 
         MDTextField:
-            hint_text:'PhoneNr'
+            hint_text:'Phonenumber'
             id: PhoneNr
             icon_right: "cell-phone"
             size_hint_x: None
@@ -45,7 +86,7 @@ MDScreen:
         MDRoundFlatButton:
             text: "Submit"
             font_size: 12
-            pos_hint: {"center_x": 0.2}
+            pos_hint: {"center_x": 0.5}
             on_press:
                 app.account_labels()
                 app.root.current = 'first_page'
@@ -54,7 +95,7 @@ MDScreen:
         MDRoundFlatButton:
             text: "Back"
             font_size: 12
-            pos_hint: {"center_x": 0.2}
+            pos_hint: {"center_x": 0.5}
             on_press:
                 app.root.current = 'first_page'
                 root.manager.transition.direction = 'right'
