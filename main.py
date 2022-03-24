@@ -1,3 +1,4 @@
+from unicodedata import category
 import mysql.connector as mysql
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
@@ -7,12 +8,12 @@ from kivymd.toast import toast
 
 
 MYSQL_USER =  'root' #USER-NAME
-MYSQL_PASS =  'NewPassword' #MYSQL_PASS
-MYSQL_DATABASE = 'appproject'#DATABASE_NAME
+MYSQL_PASS =  '9904104495' #MYSQL_PASS
+MYSQL_DATABASE = 'AppProject'#DATABASE_NAME
 
 connection = mysql.connect(user=MYSQL_USER,
                            passwd=MYSQL_PASS,
-                           database=MYSQL_DATABASE,
+                           database=MYSQL_DATABASE, 
                            host='127.0.0.1')
 
 
@@ -36,6 +37,9 @@ class PopMessages:
 
     def salesAD_updated(self):
         toast('Your ad has been successfully updated', duration=2)
+    
+    def watchlist_created(self):
+        toast("A watchlist is created", duration= 2)
 
     def no_match(self):
         toast('learn to spell', duration=2)
@@ -83,9 +87,40 @@ class LoginPage(ScreenManager):
         except:
             pass
 
+class Watchlist():
+    def __init__(self, username, category, headline, author):
+        self.username = username
+        self.category = category
+        self.author = author
+        self.headline = headline
 
+    def get_headline(self):
+        return self.headline
+    
+    def get_category(self):
+        return self.category
+    
+    def get_author(self):
+        return self.author
+    
+    
+
+    def create_watchlist(self):
+        """Skapar en bevakningslista och sätter in i datasbasen"""
+        
+        try:
+            user_id = HomePage().get_user_id(self.username)
+            cnx.execute(
+                f"INSERT INTO WatchList(USER_id, category, headline, author) "
+                f"Values({user_id}, '{self.category}', '{self.headline}','{self.author}')")
+            connection.commit()
+            PopMessages().watchlist_created()
+
+        except:
+            connection.close()
+            
 class createAD:
-
+    
     """ Klass som hanterar funktioner så som att skapa ad"""
     def __init__(self, headline, username, description, author, category, price):
         self.username = username

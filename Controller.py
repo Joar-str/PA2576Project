@@ -1,14 +1,16 @@
+from unicodedata import category
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
-from main import User, LoginPage, PopMessages, HomePage, adManager, adImages, createAD
-from kivymd.uix.list import IconRightWidget, ThreeLineAvatarIconListItem
 from kivymd.uix.imagelist import SmartTileWithLabel
 from kivymd.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from search import SearchPopupMenu
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
+from main import User, LoginPage, PopMessages, HomePage, Watchlist, adManager, adImages
+from kivymd.uix.list import IconRightWidget, ThreeLineAvatarIconListItem
+from kivy.uix.checkbox import CheckBox
 
 
 class MainApp(MDApp):
@@ -157,6 +159,23 @@ class MainApp(MDApp):
         category = self.sm.get_screen("createSalesAD").ids.created_category.text
         price = self.sm.get_screen("createSalesAD").ids.created_price.text
         createAD(headline, username, description, author, category, price).createAD()
+
+
+        
+    
+    
+       
+    def watchlist_publish(self):
+        """Skapar en bevakningslista från klassen Wachlist"""
+    
+       
+        username = self.get_name()
+        category = self.sm.get_screen("home_page").ids.category.text
+        headline = self.sm.get_screen("home_page").ids.book_name.text
+        author = self.sm.get_screen("home_page").ids.subtype.text
+        
+        
+        Watchlist( username, category, headline, author).create_watchlist()
 
 
     def update_profile(self):
