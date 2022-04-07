@@ -1,6 +1,5 @@
 #:include KV/searchDialog.kv
 
-
 MDScreen:
     name:'home_page'
     id: home_page
@@ -89,7 +88,6 @@ MDScreen:
                                 pos_hint: {'center_x': .5}
                                 on_release:
                                     app.update_profile()
-
                     Widget:
 
             Screen:
@@ -179,16 +177,14 @@ MDScreen:
                             theme_text_color: "Custom"
                             pos_hint: {'center_x': .5}
                             on_release:
-                                app.clear_your_adlist('container')
+                                app.clear_widget('container')
                                 app.update_ad_input()
                                 sm.current = 'home'
                                 sm.transition.direction = 'right'
 
 
-
         MDNavigationDrawer:
             id: nav_drawer
-
             BoxLayout:
                 orientation: 'vertical'
                 spacing: '10dp'
@@ -196,7 +192,9 @@ MDScreen:
                 MDLabel:
                     id: profile_name
                     text: ''
-                    font_style: 'Caption'
+                    font_style: 'H4'
+                    bold: True
+                    halign: 'center'
                     size_hint_y: None
                     height: self.texture_size[1]
                 ScrollView:
@@ -213,7 +211,7 @@ MDScreen:
                             text: 'Log out'
                             on_release:
                                 app.root.current = 'login'
-                                app.clear_your_adlist('container')
+                                app.clear_widget('container')
                                 app.reset()
                             IconLeftWidget:
                                 icon: 'logout'
@@ -238,7 +236,7 @@ MDScreen:
                         OneLineIconListItem:
                             text: 'Your Ads'
                             on_release:
-                                app.clear_your_adlist('container')
+                                app.clear_widget('container')
                                 app.amount_ad()
                                 sm.current = 'your_ad'
 

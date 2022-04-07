@@ -1,0 +1,27 @@
+
+
+Screen:
+    id: camera_screen
+    name: 'camera_screen'
+    BoxLayout:
+        orientation: 'vertical'
+        Camera:
+            id: camera
+            play: True
+    FloatLayout:
+        MDRaisedButton:
+            text: 'take picture'
+            size_hint_y: None
+            pos_hint: {'center_x': .7, 'center_y': .1}
+            height: '48dp'
+            on_press:
+                app.capture()
+                app.root.current = 'createSalesAD'
+
+        MDRaisedButton:
+            text: 'Back'
+            size_hint_y: None
+            pos_hint: {'center_x': .3, 'center_y': .1}
+            height: '48dp'
+            on_press:
+                app.root.current = 'createSalesAD'

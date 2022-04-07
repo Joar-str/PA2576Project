@@ -1,24 +1,23 @@
 import mysql.connector as mysql
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.toast import toast
 
-
-
-
-MYSQL_USER =  'root' #USER-NAME
-MYSQL_PASS =  'NewPassword' #MYSQL_PASS
-MYSQL_DATABASE = 'appproject'#DATABASE_NAME
+MYSQL_USER = 'root'  # USER-NAME
+MYSQL_PASS = 'NewPassword'  # MYSQL_PASS
+MYSQL_DATABASE = 'appproject'  # DATABASE_NAME
 
 connection = mysql.connect(user=MYSQL_USER,
                            passwd=MYSQL_PASS,
                            database=MYSQL_DATABASE,
                            host='127.0.0.1')
 
-
 cnx = connection.cursor(dictionary=True)
+
+
 class PopMessages:
     """En klass med som har samtliga pop meddelanden"""
+
     def invalid_input(self):
         toast("Incorrect password or username", duration=2)
 
@@ -39,6 +38,7 @@ class PopMessages:
 
     def no_match(self):
         toast('learn to spell', duration=2)
+
 
 class User:
     """Klass som skapar en avnändare"""
@@ -85,27 +85,16 @@ class LoginPage(ScreenManager):
 
 
 class createAD:
-
     """ Klass som hanterar funktioner så som att skapa ad"""
-    def __init__(self, headline, username, description, author, category, price):
+
+    def __init__(self, headline, username, description, author, category, price, image):
         self.username = username
         self.description = description
         self.author = author
         self.category = category
         self.price = price
         self.headline = headline
-
-    def get_headline(self):
-        return self.headline
-
-    def get_description(self):
-        return self.description
-
-    def get_author(self):
-        return self.author
-
-    def get_category(self):
-        return self.category
+        self.image = image
 
     def get_price(self):
         return self.price
@@ -115,24 +104,19 @@ class createAD:
         user_id = HomePage().get_user_id(self.username)
         return user_id
 
-
     def createAD(self):
         """Skapar en ad och sätter in i datasbasen"""
-        try:
-            user_id = HomePage().get_user_id(self.username)
-            cnx.execute(
-                f"INSERT INTO Sales_ad(headline, USER_id, description, author, category, price ) "
-                f"Values('{self.headline}',{user_id},'{self.description}',"
-                f"'{self.author}','{self.category}',{self.price})")
-            connection.commit()
-            PopMessages().salesAD_created()
 
-        except:
-            connection.close()
+        user_id = HomePage().get_user_id(self.username)
+        cnx.execute(
+            f"INSERT INTO Sales_ad(headline, USER_id, description, author, category, price, image) "
+            f"Values('{self.headline}',{user_id},'{self.description}',"
+            f"'{self.author}','{self.category}',{self.price}, {self.image}")
+        connection.commit()
+        PopMessages().salesAD_created()
 
 
 class adManager:
-
 
     def removeAD(self, adID):
         cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
@@ -147,7 +131,6 @@ class adManager:
         result = cnx.fetchall()
         connection.commit()
         return result
-
 
 
 class HomePage(Screen):
@@ -189,10 +172,10 @@ class HomePage(Screen):
         connection.commit()
         return the_ad
 
-    def update_profile_info(self,ID, new_name, password, phonenr):
+    def update_profile_info(self, ID, new_name, password, phonenr):
         """Uppdaterar användarens profil vid begäran"""
         cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
-        update = f"UPDATE  User SET email = '{new_name}', password = '{password}', phoneNr = {phonenr} "\
+        update = f"UPDATE  User SET email = '{new_name}', password = '{password}', phoneNr = {phonenr} " \
                  f"WHERE USER_ID = {ID}"
         cnx.execute(update)
         connection.commit()
@@ -206,21 +189,7 @@ class HomePage(Screen):
         cnx.execute(update)
         connection.commit()
 
+
 class adImages:
     """Klass som hanterar de bilder som uppladdas"""
-    def convertToBinaryData(self, file):
-        with open(file, 'rb') as f:
-            binaryData = f.read()
-
-        return binaryData
-
-
-
-
-
-
-
-
-
-
-
+    pass
