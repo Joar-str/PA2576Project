@@ -1,14 +1,19 @@
 import time
+import smtplib
 
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.app import MDApp
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.label import MDLabel
 from kivymd.uix.list import IconRightWidget, ThreeLineAvatarIconListItem
+from kivy.core.window import Window
 
 from main import User, LoginPage, PopMessages, HomePage, adManager, createAD
 from search import SearchPopupMenu
+
+Window.size = (400, 700)
 
 
 class MainApp(MDApp):
@@ -16,7 +21,6 @@ class MainApp(MDApp):
     search_menu = None
     image_obj = None
     """Klass för själva appen."""
-
 
     def build(self):
         """Build funktion som initierar samtliga filer"""
@@ -29,7 +33,9 @@ class MainApp(MDApp):
         self.sm.add_widget(Builder.load_file('KV/home_page.kv'))
         self.sm.add_widget(Builder.load_file('KV/createSalesAD_page.kv'))
         self.sm.add_widget(Builder.load_file('KV/removeAD_page.kv'))
+        self.sm.add_widget(Builder.load_file('KV/forgot_password.kv'))
         self.sm.add_widget(Builder.load_file('KV/camera.kv'))
+
         return self.sm
 
     def show_dialog(self, **kwargs):
@@ -57,7 +63,6 @@ class MainApp(MDApp):
     def convertToBinaryData(self, file):
         with open(file, 'rb') as f:
             binaryData = f.read()
-
         return binaryData
 
     def getApplication(self, *args):
@@ -92,7 +97,8 @@ class MainApp(MDApp):
                 self.sm.get_screen('home_page').ids.container.add_widget(item)
 
         except:
-            ValueError('ValueError')
+            pass
+
 
     def search_ads(self, ad):
         """Visar ads som matchar sökordet från getApplication()"""
@@ -110,7 +116,23 @@ class MainApp(MDApp):
                                                secondary_text=f"{appli[i].get('headline')}"
                                                , tertiary_text=f"Price: {appli[i].get('price')}")
 
+            item.bind(on_press=self.pressed_ad)
+
             self.sm.get_screen('home_page').ids.ad_container.add_widget(item)
+
+    def pressed_ad(self, instance):
+        user_id = HomePage().get_specific_ad(instance.text)
+        user_info = adManager().get_user_info(user_id.get('USER_id'))
+        ad_info = HomePage().get_specific_ad_info(instance.text)
+        user_info.update(ad_info)
+
+        for key in user_info:
+            self.sm.get_screen('home_page').ids.ad_box.add_widget(
+                MDLabel(text=f"{key} : {user_info[key]}",
+                        halign='center',
+                        font_style='H6',
+                        height=55)
+            )
 
     def dropAD(self, instance):
         """Skickar ad id till adManager.removeAD för att ta bort ad"""
@@ -167,7 +189,8 @@ class MainApp(MDApp):
         category = self.sm.get_screen("createSalesAD").ids.created_category.text
         price = self.sm.get_screen("createSalesAD").ids.created_price.text
         image = self.image_obj
-        createAD(headline, username, description, author, category, price, image).createAD()
+
+        createAD(headline, username, description, author, category, price).createAD()
 
     def update_profile(self):
         """Funktion som skickar den nya profil informationen till update_profile_info som sedan updaterar databasen"""
@@ -180,20 +203,39 @@ class MainApp(MDApp):
 
     def login_input(self):
         """Funktion som hanterar login. Samt sätter användarens information på Profil skärmen"""
-        old_name = self.get_name()
-        valid = LoginPage().check_account(self.get_name(), self.get_password())
-        if valid:
-            self.root.current = 'home_page'
-            self.set_homepage_ads()
-            self.sm.get_screen('home_page').ids.profile_name.text = f"Welcome {old_name}!"
-            self.sm.get_screen('home_page').ids.edit_user.text = old_name
-            self.sm.get_screen('home_page').ids.profile_phone.text = self.get_phonenr()
-            self.sm.get_screen('home_page').ids.profile_password.text = self.get_password()
+        try:
+            old_name = self.get_name()
+            valid = LoginPage().check_account(self.get_name(), self.get_password())
+            if valid:
+                self.root.current = 'home_page'
+                self.set_homepage_ads()
+                self.sm.get_screen('home_page').ids.profile_name.text = f"Welcome {old_name}!"
+                self.sm.get_screen('home_page').ids.edit_user.text = old_name
+                self.sm.get_screen('home_page').ids.profile_phone.text = self.get_phonenr()
+                self.sm.get_screen('home_page').ids.profile_password.text = self.get_password()
 
 
-        else:
+            else:
+                self.reset()
+                PopMessages().invalid_input()
+        except:
             self.reset()
             PopMessages().invalid_input()
+
+    def forgot_password(self):
+        """Funktion som som skickar lösenord till emailadress"""
+        try:
+            email1 = self.sm.get_screen('forgotpassword').ids.forgotemail.text
+            print(email1)
+            forgottenpassword = HomePage().get_forgottenpassword(email1)
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login('studentmarketbth@gmail.com', 'studentmarket123')
+            server.sendmail('studentmarketbth@gmail.com', email1, forgottenpassword['password'])
+            server.quit()
+            PopMessages().forgotten_password()
+        except:
+            PopMessages().invalid_email()
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 #:include KV/searchDialog.kv
 
+
 MDScreen:
     name:'home_page'
     id: home_page
@@ -23,6 +24,9 @@ MDScreen:
                             ScrollView:
                                 MDList:
                                     id: ad_container
+                                    on_touch_down:
+                                        sm.current = 'pressed_ad'
+
                         MDFloatingActionButton:
                             pos_hint: {"center_x": .5}
                             icon: 'plus'
@@ -41,16 +45,17 @@ MDScreen:
                         right_action_items: [['magnify', lambda x: app.show_dialog()]]
                     Screen:
                         BoxLayout:
+                            align: 'center'
                             orientation: 'vertical'
                             spacing: '0dp'
-                            padding: '-100dp'
+                            padding: '150dp'
                             MDLabel:
                                 text: 'Your Profile'
                                 font_size: 30
                                 halign: 'center'
                                 size_hint_y: None
                                 height: self.texture_size[1]
-                                padding_y: 15
+
 
                             MDTextField:
                                 id: edit_user
@@ -88,7 +93,23 @@ MDScreen:
                                 pos_hint: {'center_x': .5}
                                 on_release:
                                     app.update_profile()
-                    Widget:
+
+            Screen:
+                id: pressed_ad
+                name: 'pressed_ad'
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDToolbar:
+                        title: "Menu"
+                        elevation: 5
+                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                        right_action_items: [['magnify', lambda x: app.show_dialog()]]
+                    ScrollView:
+                        BoxLayout:
+                            orientation: 'vertical'
+                            MDList:
+                                id: ad_box
+
 
             Screen:
                 id: your_ad

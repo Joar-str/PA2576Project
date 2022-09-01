@@ -39,6 +39,12 @@ class PopMessages:
     def no_match(self):
         toast('learn to spell', duration=2)
 
+    def forgotten_password(self):
+        toast('An email with your password has been sent', duration=3)
+
+    def invalid_email(self):
+        toast('Email does not exist, try again!', duration=3)
+
 
 class User:
     """Klass som skapar en avnändare"""
@@ -80,21 +86,20 @@ class LoginPage(ScreenManager):
 
             else:
                 return False
-        except:
-            pass
+        except ValueError:
+            PopMessages().invalid_input()
 
 
 class createAD:
     """ Klass som hanterar funktioner så som att skapa ad"""
 
-    def __init__(self, headline, username, description, author, category, price, image):
+    def __init__(self, headline, username, description, author, category, price):
         self.username = username
         self.description = description
         self.author = author
         self.category = category
         self.price = price
         self.headline = headline
-        self.image = image
 
     def get_price(self):
         return self.price
@@ -109,9 +114,8 @@ class createAD:
 
         user_id = HomePage().get_user_id(self.username)
         cnx.execute(
-            f"INSERT INTO Sales_ad(headline, USER_id, description, author, category, price, image) "
-            f"Values('{self.headline}',{user_id},'{self.description}',"
-            f"'{self.author}','{self.category}',{self.price}, {self.image}")
+            f"INSERT INTO Sales_ad(headline, USER_id, description, author, category, price) "
+            f"Values('{self.headline}',{user_id},'{self.description}','{self.author}','{self.category}',{self.price})")
         connection.commit()
         PopMessages().salesAD_created()
 
@@ -129,6 +133,13 @@ class adManager:
         searchInput = f"SELECT * FROM Sales_ad"
         cnx.execute(searchInput)
         result = cnx.fetchall()
+        connection.commit()
+        return result
+
+    def get_user_info(self, user_id):
+        user_info = f"SELECT email, phoneNr FROM User Where USER_id = {user_id}"
+        cnx.execute(user_info)
+        result = cnx.fetchone()
         connection.commit()
         return result
 
@@ -172,6 +183,13 @@ class HomePage(Screen):
         connection.commit()
         return the_ad
 
+    def get_specific_ad_info(self, ad_id):
+        ad_info = f"SELECT headline, description, author, category, price FROM sales_ad WHERE Ad_id = {ad_id}"
+        cnx.execute(ad_info)
+        result = cnx.fetchone()
+        connection.commit()
+        return result
+
     def update_profile_info(self, ID, new_name, password, phonenr):
         """Uppdaterar användarens profil vid begäran"""
         cnx.execute(f"SET SQL_SAFE_UPDATES = 0")
@@ -189,7 +207,15 @@ class HomePage(Screen):
         cnx.execute(update)
         connection.commit()
 
-
+    def get_forgottenpassword(self, name):
+        emailpassword_variable = f"SELECT password FROM User WHERE email = '{name}'"
+        cnx.execute(emailpassword_variable)
+        password_query1 = cnx.fetchone()
+        connection.commit()
+        return password_query1
 class adImages:
     """Klass som hanterar de bilder som uppladdas"""
     pass
+
+
+

@@ -13,7 +13,7 @@ MDScreen:
 
     MDCard:
         size_hint: None, None
-        size: 275, 400
+        size: 400, 700
         pos_hint: {"center_x": .5, "center_y": .5}
         elevation: 10
         padding: 25
@@ -27,7 +27,7 @@ MDScreen:
             orientation:'vertical'
             padding: 10
             MDLabel:
-                text: "Create Account,"
+                text: "Create Account"
                 font_size: 20
 
                 halign: 'center'
@@ -52,12 +52,12 @@ MDScreen:
                 font_size: 15
 
         MDTextField:
-            hint_text:'Username'
+            hint_text:'Email'
             id: created_name
-            icon_right: "account"
+            icon_right: "email"
             size_hint_x: None
             width: 200
-            font_size: 18
+            font_size: 12
             pos_hint: {'center_x': .5}
             multiline: False
 
@@ -69,21 +69,21 @@ MDScreen:
             width: 200
             password: False
             pos_hint: {'center_x': .5}
-            font_size: 18
+            font_size: 12
             multiline: False
 
         MDTextField:
             hint_text:'Phonenumber'
             id: PhoneNr
-            icon_right: "cell-phone"
+            icon_right: "cellphone"
             size_hint_x: None
             width: 200
             password: False
             pos_hint: {'center_x': .5}
-            font_size: 18
+            font_size: 12
             multiline: False
 
-        MDRoundFlatButton:
+        MDRectangleFlatButton:
             text: "Submit"
             font_size: 12
             pos_hint: {"center_x": 0.5}
@@ -92,7 +92,7 @@ MDScreen:
                 app.root.current = 'first_page'
                 root.manager.transition.direction = 'right'
 
-        MDRoundFlatButton:
+        MDRectangleFlatButton:
             text: "Back"
             font_size: 12
             pos_hint: {"center_x": 0.5}
